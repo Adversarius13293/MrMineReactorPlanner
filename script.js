@@ -28,8 +28,7 @@ function hideDropdowns() {
 }
 
 // Set a cells style to a specific style.
-function setComponent(forCellId) {
-	//function setComponent(forCellId, copyClassFrom) {
+function setComponent(forCellId, copyClassFrom) {
 		document.getElementById('debug').textContent+= " setComp: " + forCellId ;
 	var styleClass = copyClassFrom.className;
 	var cell = document.getElementById(forCellId);
@@ -106,11 +105,11 @@ function addDropdownOptions(parentNode, cellId) {
 	for(var i = 0; i < componentClasses.length; i++){
 		var componentBtn = document.createElement('button');
 		componentBtn.className = componentClasses[i];
-		componentBtn.onclick = function(arg) {
+		componentBtn.onclick = function(arg, arg2) {
 			return function() {
-				setComponent(arg);
+				setComponent(arg, arg2);
 			}
-		}(cellId);
+		}(cellId, componentBtn);
 		parentNode.appendChild(componentBtn);
 	}
 }
