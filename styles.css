@@ -1,70 +1,69 @@
 body{
-  padding: 25px;
-  color: gray;
-  background-color: black;
+	padding: 25px;
+	color: gray;
+	background-color: black;
 }
 .title {
 	color: #5C6AC4;
 }
 
 .reactor-container {
-    width: 734px;
-    background: gray;
-    overflow-y: auto;
-    position: relative;
+	width: 734px;
+	background: gray;
+	overflow-y: auto;
+	position: relative;
 }
 .cell {
-  width: 78px;
-  height: 78px;
-  float: left; /* Let the dropdown overlay the button. */
-  background: lightgray;
-  cursor: pointer;
+	width: 78px;
+	height: 78px;
+	float: left; /* Let the dropdown overlay the button. */
+	background: lightgray;
+	cursor: pointer;
 }
 
 /*.cell:hover, .cell:focus {
-  background-color: #2980B9;
+	background-color: #2980B9;
 }*/
 
 .cell-container {
-  position: relative; /* Define the position, later used for the dropdown. */
-  display: inline-block; /* Make the div only as wide as needed, instead over the whole line. */
+	position: relative; /* Define the position, later used for the dropdown. */
+	display: inline-block; /* Make the div only as wide as needed, instead over the whole line. */
 }
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-  display: none;
-  position: absolute; /* Allows overlaying. */
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  margin: 5px;
+	display: none;
+	position: absolute; /* Allows overlaying. */
+	background-color: #f1f1f1;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+	margin: 5px;
 }
 
 .dropdown-content button {
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
 }
-
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {
-  display: block;
+	display: block;
 }
 
 /* Reactor components
-   ========================================================================== */
-   
+	 ========================================================================== */
+	 
 .component-empty {
-  background-color: #c9c9c9;
+	background-color: #c9c9c9;
 }
 .component-empty:before {
- content: "Empty";
+	content: "Empty";
 }
 .component-fan {
- background-color: #18253e;
+	background-color: #18253e;
 }
 .component-fan:before {
- content: "Fan";
+	content: "Fan";
 }
