@@ -1,28 +1,34 @@
-function showTime() {
-	document.getElementById('currentTime').innerHTML = new Date().toUTCString();
-}
-showTime();
-setInterval(function () {
-	showTime();
-}, 1000);
-
-
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
+/* Toggle between hiding and showing the dropdown on button click. Hides other elements dropdowns. */
+function toggleDropdown(elementId) {
+  var shown = document.getElementById(elementId).classList.contains('show');
+  hideDropdowns();
+  if(!shown){
+    // All dropdowns are allready hidden. Only change something if it needs to be shown.
+    document.getElementById(elementId).classList.toggle('show');
+  }
 }
 
-// Close the dropdown menu if the user clicks outside of it
+// Close the dropdown if clicked outside of any cell button.
 window.onclick = function(event) {
   if (!event.target.matches('.cell')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
+    hideDropdowns();
+  }
+}
+
+function hideDropdowns() {
+  var dropdowns = document.getElementsByClassName("dropdown-content");
+  var i;
+  for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show')) {
+      openDropdown.classList.remove('show');
     }
+  }
+}
+// Set a cells style to a specific style.
+function setComponent(forCellId, styleClass) {
+  var cell = document.getElementById(forCellId);
+  if (!cell.classList.contains(styleClass)) {
+    cell.className = "cell " + styleClass;
   }
 }

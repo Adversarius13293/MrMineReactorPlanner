@@ -5,39 +5,100 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+      <script src="script.js"></script>
       <h1 class="title">Test</h1>
       <p id="currentTime"></p>
-      <script src="script.js"></script>
-      <input type="date" id="alter" name="alter">
       full layout
       grayed out size
       click on each cell to set element
       elements open as dropdown 
+      
+      slots cells fields items picks elements crafts  options selections part
+      components 
+      
+      <br /> test<br /> test<br /> test<br /> test
       <div/>
       <div class="reactor-container">
-        <button onclick="myFunction()" class="cell" id="0_0">Empty</button>
+        <div class="cell-container">
+          <button onclick="toggleDropdown('dropdown_0_0')" class="cell component-empty" id="0_0"></button>
+          <div id="dropdown_0_0" class="dropdown-content">
+            <button onclick="setComponent('0_0', 'component-empty')" class="component-empty" id="pick_a_0_0"></a>
+            <button onclick="setComponent('0_0', 'component-fan')" class="component-fan" id="pick_b_0_0"></a>
+            <button onclick="setComponent('0_0', 'component-empty')" class="component-empty" id="pick_a_0_0"></a>
+          </div>
+        </div>
+        <div class="cell-container">
         <button class="cell" id="0_1">Empty</button>
-        <div id="myDropdown" class="dropdown-content">
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="0_2">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="0_3">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="0_4">Empty</button>
+        </div>
+        <div class="cell-container">
+          <button onclick="toggleDropdown('dropdown_0_5')" class="cell" id="0_5">EmptyX</button>
+          <div id="dropdown_0_5" class="dropdown-content">
+            <button class="pick" id="pick_a_0_5">Link a</a>
+            <button class="pick" id="pick_b_0_5">Link b</a>
+            <button class="pick">Link 3</a>
+          </div>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="0_6">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="0_7">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="0_8">Empty</button>
+        </div>
+        
+          <div class="linebreak"></div>
+        
+        <div class="cell-container">
+        <button class="cell" id="1_0">Empty</button>
+        </div>
+        <div class="cell-container">
+        
+        <button onclick="toggleDropdown('dropdown_1_1')" class="cell" id="1_1">Empty</button>
+        
+        <div id="dropdown_1_1" class="dropdown-content">
+          <button class="pick" id="pick_a_1_1">Link x</a>
+          <button class="pick" id="pick_b_1_1">Link y</a>
+          <button class="pick">Link 3</a>
+        </div>
+        </div>
+        <div class="cell-container">
+        
+        <button class="cell" id="1_2">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="1_3">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="1_4">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="1_5">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="1_6">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="1_7">Empty</button>
+        </div>
+        <div class="cell-container">
+        <button class="cell" id="1_8">Empty</button>
+        </div>
+        <!--div id="dropdown_0_0" class="dropdown-content">
           <button class="pick" id="pick_a_0_1">Link 1</a>
           <button class="pick" id="pick_b_0_1">Link 2</a>
           <button class="pick">Link 3</a>
-        </div>
-        <button class="cell" id="0_2">Empty</button>
-        <button class="cell" id="0_3">Empty</button>
-        <button class="cell" id="0_4">Empty</button>
-        <button class="cell" id="0_5">Empty</button>
-        <button class="cell" id="0_6">Empty</button>
-        <button class="cell" id="0_7">Empty</button>
-        <button class="cell" id="0_8">Empty</button>
-        <button class="cell" id="1_0">Empty</button>
-        <button class="cell" id="1_1">Empty</button>
-        <button class="cell" id="1_2">Empty</button>
-        <button class="cell" id="1_3">Empty</button>
-        <button class="cell" id="1_4">Empty</button>
-        <button class="cell" id="1_5">Empty</button>
-        <button class="cell" id="1_6">Empty</button>
-        <button class="cell" id="1_7">Empty</button>
-        <button class="cell" id="1_8">Empty</button>
+        </div-->
       </div>
   </body>
 </html>
