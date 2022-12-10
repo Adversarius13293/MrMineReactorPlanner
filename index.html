@@ -26,30 +26,34 @@
 		bomb used up in:
 		overall rod replacements:
 		overall bomb replacements:
+		rod+bomb crafting costs?
 		</div>
-		<div class="reactor-container">
-			<div class="cell-container">
+		<div id='debug'>Hi!</div>
+		<div class="reactor-container" id="reactor-container">
+			<!--div class="cell-container">
 				<button onclick="toggleDropdown('dropdown_0_0')" class="cell component-empty" id="0_0"></button>
 				<div id="dropdown_0_0" class="dropdown-content">
-					<button onclick="setComponent('0_0', 'component-empty')" class="component-empty" id="pick_a_0_0"></a>
-					<button onclick="setComponent('0_0', 'component-fan')" class="component-fan" id="pick_b_0_0"></a>
-					<button onclick="setComponent('0_0', 'component-empty')" class="component-empty" id="pick_a_0_0"></a>
+					<button onclick="setComponent('0_0', this)" class="component-empty" id="pick_a_0_0"></a>
+					<button onclick="setComponent('0_0', this)" class="component-fan" id="pick_b_0_0"></a>
+					<button onclick="setComponent('0_0', this)" class="component-he" id="pick_c_0_0"></a>
+					<button onclick="setComponent('0_0', this)" class="component-dhe" id="pick_c_0_0"></a>
+					<button onclick="setComponent('0_0', this)" class="component-qhe" id="pick_c_0_0"></a>
 				</div>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="0_1">Empty</button>
+			<button class="cell component-empty" id="0_1"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="0_2">Empty</button>
+			<button class="cell component-empty" id="0_2"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="0_3">Empty</button>
+			<button class="cell component-empty" id="0_3"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="0_4">Empty</button>
+			<button class="cell component-empty" id="0_4"></button>
 			</div>
 			<div class="cell-container">
-				<button onclick="toggleDropdown('dropdown_0_5')" class="cell" id="0_5">EmptyX</button>
+				<button onclick="toggleDropdown('dropdown_0_5')" class="cell component-empty" id="0_5">EmptyX</button>
 				<div id="dropdown_0_5" class="dropdown-content">
 					<button class="pick" id="pick_a_0_5">Link a</a>
 					<button class="pick" id="pick_b_0_5">Link b</a>
@@ -57,23 +61,23 @@
 				</div>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="0_6">Empty</button>
+			<button class="cell component-empty" id="0_6"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="0_7">Empty</button>
+			<button class="cell component-empty" id="0_7"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="0_8">Empty</button>
+			<button class="cell component-empty" id="0_8"></button>
 			</div>
 			
 				<div class="linebreak"></div>
 			
 			<div class="cell-container">
-			<button class="cell" id="1_0">Empty</button>
+			<button class="cell component-empty" id="1_0"></button>
 			</div>
 			<div class="cell-container">
 			
-			<button onclick="toggleDropdown('dropdown_1_1')" class="cell" id="1_1">Empty</button>
+			<button onclick="toggleDropdown('dropdown_1_1')" class="cell component-empty" id="1_1"></button>
 			
 			<div id="dropdown_1_1" class="dropdown-content">
 				<button class="pick" id="pick_a_1_1">Link x</a>
@@ -83,25 +87,25 @@
 			</div>
 			<div class="cell-container">
 			
-			<button class="cell" id="1_2">Empty</button>
+			<button class="cell component-empty" id="1_2"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="1_3">Empty</button>
+			<button class="cell component-empty" id="1_3"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="1_4">Empty</button>
+			<button class="cell component-empty" id="1_4"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="1_5">Empty</button>
+			<button class="cell component-empty" id="1_5"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="1_6">Empty</button>
+			<button class="cell component-empty" id="1_6"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="1_7">Empty</button>
+			<button class="cell component-empty" id="1_7"></button>
 			</div>
 			<div class="cell-container">
-			<button class="cell" id="1_8">Empty</button>
+			<button onclick="xy()" class="cell component-empty" id="1_8"></button>
 			</div>
 			<!--div id="dropdown_0_0" class="dropdown-content">
 				<button class="pick" id="pick_a_0_1">Link 1</a>

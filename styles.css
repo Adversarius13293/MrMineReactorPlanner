@@ -67,3 +67,22 @@ body{
 .component-fan:before {
 	content: "Fan";
 }
+
+.component-he {
+	background-color: red;
+}
+.component-he:before {
+	content: "HE";
+}
+.component-dhe {
+	background-color: red;
+}
+.component-dhe:before {
+	content: "DHE";
+}
+.component-qhe {
+	background-color: red;
+}
+.component-qhe:before {
+	content: "QHE";
+}
