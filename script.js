@@ -19,7 +19,7 @@ window.onclick = function(event) {
 function hideDropdowns() {
 	var dropdowns = document.getElementsByClassName('dropdown-content');
 	var i;
-	for (i = 0; i < dropdowns.length; i++) {
+	for (var i = 0; i < dropdowns.length; i++) {
 		var openDropdown = dropdowns[i];
 		if (openDropdown.classList.contains('show')) {
 			openDropdown.classList.remove('show');
@@ -50,7 +50,7 @@ iterate through them, find fuel rod and bombs
 function xy() {
 	var cells = document.getElementsByClassName('cell');
 	var components = [];
-	for(i = 0; i < cells.length; i++) {
+	for(var i = 0; i < cells.length; i++) {
 		var comp = createComponentsFromHtml(cells[i]);
 		components[components.length] = comp;	
 	}
@@ -68,8 +68,8 @@ function xy() {
 window.onload = function() {	
 	var reactorContainerNode = document.getElementById('reactor-container');
 	
-	for(i = 0; i < 9; i++) {
-		for(j = 0; j < 9; j++) {
+	for(var i = 0; i < 9; i++) {
+		for(var j = 0; j < 9; j++) {
 			// Div containing the button.
 			var cellContainer = document.createElement('div');
 			cellContainer.className = 'cell-container';
@@ -103,9 +103,9 @@ window.onload = function() {
 
 function addDropdownOptions(parentNode, cellId) {
 	var componentClasses = getComponentsCss();
-	for(x = 0; x < componentClasses.length; x++){
+	for(var i = 0; i < componentClasses.length; i++){
 		var componentBtn = document.createElement('button');
-		componentBtn.className = componentClasses[x];
+		componentBtn.className = componentClasses[i];
 		componentBtn.onclick = function(arg) {
 			return function() {
 				setComponent(arg);
