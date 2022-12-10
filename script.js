@@ -1,6 +1,7 @@
-/* Toggle between hiding and showing the dropdown on button click. Hides other elements dropdowns. */
+/**
+* Toggle between hiding and showing the dropdown on button click. Hides other cells dropdowns.
+*/
 function toggleDropdown(elementId) {
-		document.getElementById('debug').textContent+= " toggled: " + elementId ;
 	var shown = document.getElementById(elementId).classList.contains('show');
 	hideDropdowns();
 	if(!shown){
@@ -9,13 +10,17 @@ function toggleDropdown(elementId) {
 	}
 }
 
-// Close the dropdown if clicked outside of any cell button.
+/**
+* Close the dropdown if clicked outside of any cell button.
+*/
 window.onclick = function(event) {
 	if (!event.target.matches('.cell')) {
 		hideDropdowns();
 	}
 }
-
+/**
+* Hide every dropdown menu.
+*/
 function hideDropdowns() {
 	var dropdowns = document.getElementsByClassName('dropdown-content');
 	var i;
@@ -27,9 +32,10 @@ function hideDropdowns() {
 	}
 }
 
-// Set a cells style to a specific style.
+/** 
+* Set a cells style to a specific elements style, in addition to the default cell style.
+*/
 function setComponent(forCellId, copyClassFrom) {
-		document.getElementById('debug').textContent+= " setComp: " + forCellId ;
 	var styleClass = copyClassFrom.className;
 	var cell = document.getElementById(forCellId);
 	if (!cell.classList.contains(styleClass)) {
@@ -43,10 +49,8 @@ Get all cells, save in list
 iterate through them, find fuel rod and bombs
 	get neighbours of them out of the list
 	if its heat part, add to heat system. remove from list
-	
-
 */
-function xy() {
+function TODO() {
 	var cells = document.getElementsByClassName('cell');
 	var components = [];
 	for(var i = 0; i < cells.length; i++) {
@@ -63,7 +67,9 @@ function xy() {
 		}
 	}
 }
-
+/**
+* Fill the reactor container with all the cell buttons and a dropdown menu for every button.
+*/
 window.onload = function() {	
 	var reactorContainerNode = document.getElementById('reactor-container');
 	
@@ -114,6 +120,9 @@ function addDropdownOptions(parentNode, cellId) {
 	}
 }
 
+/**
+* Get all possible reactor component css classes.
+*/
 function getComponentsCss() {
 	// TODO: Dynamically read all '.component-' classes from css file?
 	//var sheets = document.styleSheets;
