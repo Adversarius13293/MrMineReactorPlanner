@@ -6,15 +6,16 @@
 	</head>
 	<body>
 		<script src="script.js"></script>
-		<h1 class="title">Test</h1>
-		<p id="currentTime"></p>
+		<h1 class="title">MrMine Reactor Planner</h1>
+		<!--div>
 		slots cells fields items picks elements crafts	options selections part
-		components 		
-		<div>
+		components
+		
 		energy/sec:
 		battery capacity:
 		battery full in:
 		overall energy overproduction:
+		overall heat:
 		rod used up in:
 		bomb used up in:
 		overall rod replacements:
@@ -25,10 +26,18 @@
 		size selector
 		images?
 		export/import?
+		</div-->
+		<div>
+			<div>Energy/Sec: <span id="feedback_eps"></span></div>
+			<div>Battery capacity: <span id="feedback_bcap"></span></div>
+			<div>Battery full in: <span id="feedback_bfull"></span></div>
+			<div>Overall energy output: <span id="feedback_etotal"></span></div>
+			<div>Overall heat difference: <span id="feedback_hdiff"></span></div>
+			<div id="feedback_warning"></div>
 		</div>
-		<div id='debug'>Hi!</div>
 		<div class="reactor-container" id="reactor-container">
 			<!-- Filled via javascript. -->
 		</div>
+		<div id="debug">Hi!</div>
 	</body>
 </html>

@@ -86,3 +86,17 @@ body{
 .component-qhe:before {
 	content: "QHE";
 }
+
+.component-duct {
+	background-color: lightblue;
+}
+.component-duct:before {
+	content: "Duct";
+}
+
+.component-cb1 {
+	background-color: yellow;
+}
+.component-cb1:before {
+	content: "CB1";
+}
