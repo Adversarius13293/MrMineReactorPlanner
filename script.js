@@ -45,29 +45,37 @@ function setComponent(forCellId, copyClassFrom) {
 }
 
 
-/*
-Get all cells, save in list
-iterate through them, find fuel rod and bombs
-	get neighbours of them out of the list
-	if its heat part, add to heat system. remove from list
-*/
+/** Variables for gathering and displaying the reactor stats. */
+var warningEnergy;
+var warningHeat;
+var energyPerSecond;
+var energyTotal;
+var heatDiff;
+var batteryCap;
+
 function updateReactorStats() {
 	var cells = document.getElementsByClassName('cell');
 	var components = [];
 	for(var i = 0; i < cells.length; i++) {
 		var comp = createComponentsFromHtml(cells[i]);
-		components[components.length] = comp;	
+		if(comp) {
+			// Ignore null objects.
+			components[components.length] = comp;
+		}
 	}
+	// Reset all old values.
+	warningEnergy = '';
+	warningHeat = '';
+	energyPerSecond = 0;
+	energyTotal = 0;
+	heatDiff = 0;
+	batteryCap = 0;
 	
-	var warningEnergy;
-	var warningHeat;
-	var energyPerSecond = 0;
-	var energyTotal = 0;
-	var heatDiff = 0;
-	var batteryCap = 0;
-	
-	// TODO:
 	// Process buffs first.
+	for(var i = 0; i < components.length; i++) {
+		var comp = components[i];
+		// TODO: Buffs
+	}
 	
 	// Then need to process heat transfering elements. To not mark a non transfering heat
 	// component as processed, which then later can't be included in a heat system anymore.
@@ -77,38 +85,35 @@ function updateReactorStats() {
 			continue;
 		}
 		comp.isProcessed = true;
-		
 		var currentHeatSystem = [];		
 		currentHeatSystem[0] = comp;
 		
 		getHeatSystemMembers(comp, components, currentHeatSystem);
 		// TODO: Test for energy and heat limits.
 		var systemHeat = 0;
-		for(var j = 0; j < currentHeatSystem.length; j++) {
-			// TODO: Move stat gathering into function?
-			comp = currentHeatSystem[j];
-			heatDiff += comp.heat;
-			if(comp.doesStoreEnergy) {
-				batteryCap += comp.totalEnergy;
-			} else {
-				energyTotal += comp.totalEnergy;
-				energyPerSecond += comp.energyPerSec;				
-			}
-		}
+		addToRectorStats(currentHeatSystem);
+		
 		//document.getElementById('debug').textContent+= " heat System size: " + currentHeatSystem.length;
 	}
 	
 	// In the end process remaining stand-alone components.
+	for(var i = 0; i < components.length; i++) {
+		var comp = components[i];
+		if(comp.isProcessed){
+			continue;
+		}
+		addToRectorStats(comp);
+	}
 	
-	document.getElementById('feedback_eps').textContent = energyPerSecond;
-	document.getElementById('feedback_bcap').textContent = batteryCap;
-	if(batteryCap == 0) {
+	document.getElementById('feedback_eps').textContent = this.energyPerSecond;
+	document.getElementById('feedback_bcap').textContent = this.batteryCap;
+	if(this.batteryCap == 0 || this.energyPerSecond <= 0) {
 		document.getElementById('feedback_bfull').textContent = '-';
 	} else {
-		document.getElementById('feedback_bfull').textContent = Math.max(batteryCap/energyPerSecond,0);	
+		document.getElementById('feedback_bfull').textContent = this.batteryCap/this.energyPerSecond;	
 	}
-	document.getElementById('feedback_ediff').textContent = energyTotal;
-	document.getElementById('feedback_hdiff').textContent = heatDiff;
+	document.getElementById('feedback_ediff').textContent = this.energyTotal;
+	document.getElementById('feedback_hdiff').textContent = this.heatDiff;
 	// rod used up
 	// bomb used up
 }
@@ -123,14 +128,33 @@ function getHeatSystemMembers(currentComponent, remainingComponents, members) {
 		var diffY = Math.abs(comp.position[1] - currentComponent.position[1]);
 		// Only one step in only one direction, so it is a neighbour.
 		if(diffX + diffY == 1) {
-			comp.isProcessed = true;
 			if(comp.heat != 0 || comp.doesTransferHeat) {
+				comp.isProcessed = true;
 				members[members.length] = comp;
+				
+				// If it does transfer heat, check its neighbours. Currently only excludes fans.
+				if(comp.doesTransferHeat) {
+					getHeatSystemMembers(comp, remainingComponents, members);
+				}
 			}
-			// If it does transfer heat, check its neighbours. Currently only excludes fans.
-			if(comp.doesTransferHeat) {
-				getHeatSystemMembers(comp, remainingComponents, members);
-			}
+		}
+	}
+}
+
+function addToRectorStats(components) {
+	// Not sure how dirty this is, to accept arrays and also single objects.
+	if(!components.length) {
+		components = [components];
+	}
+	for(var j = 0; j < components.length; j++) {
+		comp = components[j];
+		
+		this.heatDiff += comp.heat;
+		if(comp.doesStoreEnergy) {
+			this.batteryCap += comp.totalEnergy;
+		} else {
+			this.energyTotal += comp.totalEnergy;
+			this.energyPerSecond += comp.energyPerSec;				
 		}
 	}
 }
@@ -204,7 +228,8 @@ function createComponentsFromHtml(htmlCell) {
 	// Id in format 0_3, for first row 4th colum.
 	var position = htmlCell.id.split('_');
 	if(htmlCell.classList.contains('component-empty')){
-		return new Component('Empty', 0, 0, 0, false, false, position, htmlCell);
+		// I do not need empty cells.
+		// return new Component('Empty', 0, 0, 0, false, false, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-fan')){
 		return new Component('Fan', 0, -12, 0, false, false, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-he')){
@@ -275,7 +300,7 @@ class Component {
 	doesTransferHeat;
 	doesStoreEnergy;
 	position;
-	/** Used to mark overheated or low on energy components. */
+	/** Used to maybe mark overheated or low on energy components? */
 	htmlElement;
 	isProcessed = false;
 	// TODO: Buffs
@@ -292,6 +317,6 @@ class Component {
 	}
 	
 	toString() {
-		return this.name;
+		return this.name + '('+this.isProcessed+')';
 	}
 }
