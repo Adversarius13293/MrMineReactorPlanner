@@ -7,34 +7,33 @@
 	<body>
 		<script src="script.js"></script>
 		<h1 class="title">MrMine Reactor Planner</h1>
-		<!--div>
-		slots cells fields items picks elements crafts	options selections part
-		components
-		
-		energy/sec:
-		battery capacity:
-		battery full in:
-		overall energy overproduction:
-		overall heat:
-		rod used up in:
-		bomb used up in:
-		overall rod replacements:
-		overall bomb replacements:
-		rod+bomb crafting costs?
-		
-		clear button
-		size selector
-		images?
-		export/import?
+		<!--div>		
+			TODOs:
+			propper fan-sharing
+			rector size selector
+			buffs
+			popup scrollbar for far right cells -> define right-distance?
+			
+			Ideas:
+			clear button
+			images?
+			export/import?
+			display values in one column? or directly behind the label?
 		</div-->
-		<div>
+		<div class="feedback-container">
 			<div>Energy/Sec: <span id="feedback_eps"></span></div>
 			<div>Battery capacity: <span id="feedback_bcap"></span></div>
 			<div>Battery full in: <span id="feedback_bfull"></span></div>
-			<div>Overall energy output: <span id="feedback_etotal"></span></div>
-			<div>Overall heat difference: <span id="feedback_hdiff"></span></div>
+			<div>Overall energy balance: <span id="feedback_ediff"></span></div>
+			<div>Overall heat balance: <span id="feedback_hdiff"></span></div>
+			<div>Fuel rod used up in: <span id="feedback_fup"></span></div>
+			<div>Bombardment used up in: <span id="feedback_bup"></span></div>
+			<div>Needed fuel replacements: <span id="feedback_frep"></span></div>
+			<div>Needed bombardment replacements: <span id="feedback_brep"></span></div>
+			<!-- rod+bomb crafting costs? -->
 			<div id="feedback_warning"></div>
 		</div>
+		
 		<div class="reactor-container" id="reactor-container">
 			<!-- Filled via javascript. -->
 		</div>

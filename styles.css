@@ -7,6 +7,12 @@ body{
 	color: #5C6AC4;
 }
 
+.feedback-container {
+  display: grid;
+  grid-template-columns: 244px 244px 244px;
+  width: 734px;
+}
+
 .reactor-container {
 	width: 734px;
 	background: gray;
@@ -35,15 +41,15 @@ body{
 	display: none;
 	position: absolute; /* Allows overlaying. */
 	background-color: #f1f1f1;
-	min-width: 160px;
+	width: 250px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
 	margin: 5px;
 }
 
 .dropdown-content button {
-	width: 40px;
-	height: 40px;
+	width: 50px;
+	height: 50px;
 	cursor: pointer;
 }
 
@@ -67,7 +73,6 @@ body{
 .component-fan:before {
 	content: "Fan";
 }
-
 .component-he {
 	background-color: red;
 }
@@ -86,17 +91,147 @@ body{
 .component-qhe:before {
 	content: "QHE";
 }
-
-.component-duct {
+.component-e {
+	background-color: green;
+}
+.component-e:before {
+	content: "E";
+}
+.component-de {
+	background-color: green;
+}
+.component-de:before {
+	content: "DE";
+}
+.component-qe {
+	background-color: green;
+}
+.component-qe:before {
+	content: "QE";
+}
+.component-mo {
+	background-color: blue;
+}
+.component-mo:before {
+	content: "MO";
+}
+.component-dmo {
+	background-color: blue;
+}
+.component-dmo:before {
+	content: "DMO";
+}
+.component-qmo {
+	background-color: blue;
+}
+.component-qmo:before {
+	content: "QMO";
+}
+.component-bs {
+	background-color: brown;
+}
+.component-bs:before {
+	content: "BS";
+}
+.component-bl {
+	background-color: brown;
+}
+.component-bl:before {
+	content: "BL";
+}
+.component-bxl {
+	background-color: brown;
+}
+.component-bxl:before {
+	content: "BXL";
+}
+.component-hd {
+	background-color: darkblue;
+}
+.component-hd:before {
+	content: "HD";
+}
+.component-cb {
+	background-color: orange;
+}
+.component-cb:before {
+	content: "CB";
+}
+.component-pb {
 	background-color: lightblue;
 }
-.component-duct:before {
-	content: "Duct";
+.component-pb:before {
+	content: "PB";
 }
-
+.component-sb {
+	background-color: silver;
+}
+.component-sb:before {
+	content: "SB";
+}
+.component-gb {
+	background-color: gold;
+}
+.component-gb:before {
+	content: "GB";
+}
 .component-cb1 {
 	background-color: yellow;
 }
 .component-cb1:before {
 	content: "CB1";
+}
+.component-cb2 {
+	background-color: yellow;
+}
+.component-cb2:before {
+	content: "CB2";
+}
+.component-cb3 {
+	background-color: yellow;
+}
+.component-cb3:before {
+	content: "CB3";
+}
+.component-pp {
+	background-color: #868191;
+}
+.component-pp:before {
+	content: "PP";
+}
+.component-dpp {
+	background-color: #868191;
+}
+.component-dpp:before {
+	content: "DPP";
+}
+.component-qpp {
+	background-color: #868191;
+}
+.component-qpp:before {
+	content: "QPP";
+}
+.component-rtg {
+	background-color: pink;
+}
+.component-rtg:before {
+	content: "RTG";
+}
+.component-eb1 {
+	background-color: cyan;
+}
+.component-eb1:before {
+	content: "EB1";
+}
+.component-eb2 {
+	background-color: cyan;
+}
+.component-eb2:before {
+	content: "EB2";
+}
+.component-eb3 {
+	background-color: cyan;
+}
+.component-eb3:before {
+	content: "EB3";
 }
