@@ -194,6 +194,7 @@ window.onload = function() {
 			// TODO: Reusing just one dropdown div for all buttons would be nice, but I would need to find the current cell button. And have to align the dropdown dynamically.
 			addDropdownOptions(dropdown, i+'_'+j);
 		}
+		reactorContainerNode.appendChild(document.createElement('br'));
 	}
 }
 

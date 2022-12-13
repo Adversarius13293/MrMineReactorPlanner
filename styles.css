@@ -1,10 +1,11 @@
 body{
 	padding: 25px;
+	padding-top: 0px;
 	color: gray;
-	background-color: black;
+	background-color: #1f272e;
 }
 .title {
-	color: #5C6AC4;
+	color: #f1c01c;
 }
 
 .feedback-container {
@@ -14,10 +15,11 @@ body{
 }
 
 .reactor-container {
-	width: 734px;
-	background: gray;
-	overflow-y: auto;
-	position: relative;
+	display: inline-block; /* For auto minimal width. */
+	background: gray; /* Should not even be visible? */
+	overflow-y: visible; /* Default, but just to make sure to not cut the dropdown off with a scrollbar. */
+	position: relative; /* Defines the area for the absolute dropdown. */
+	line-height: 60%; /* Vertical spacing between each button row. */
 }
 .cell {
 	width: 78px;
@@ -40,17 +42,18 @@ body{
 .dropdown-content {
 	display: none;
 	position: absolute; /* Allows overlaying. */
-	background-color: #f1f1f1;
 	width: 250px;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-	z-index: 1;
-	margin: 5px;
+	box-shadow: 0px 8px 16px 8px rgba(0,0,0,0.2);
+	z-index: 1; /* Higher overlay priority. */
+	margin: 5px; /* To not exactly overlay the cell button, but rather shiftet a bit to the bottom right. */
 }
 
 .dropdown-content button {
 	width: 50px;
 	height: 50px;
 	cursor: pointer;
+	float:left; /* Some alignment problems with mutliple line buttons, so let them float to the left. */
+	padding: 0px; /* Heat Duct chars had some problems. */
 }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
@@ -62,151 +65,161 @@ body{
 	 ========================================================================== */
 	 
 .component-empty {
-	background-color: #c9c9c9;
+	background-color: #dddddd;
 }
 .component-empty:before {
-	content: "Empty";
+	content: "";
 }
 .component-fan {
-	background-color: #18253e;
+	background-color: #2d3f62;
 }
 .component-fan:before {
-	content: "Fan";
+	content: "\002622";
+	font-size: 240%;
 }
 .component-he {
-	background-color: red;
+	background-color: #c04646;
 }
 .component-he:before {
 	content: "HE";
 }
 .component-dhe {
-	background-color: red;
+	background-color: #c04646;
 }
 .component-dhe:before {
 	content: "DHE";
 }
 .component-qhe {
-	background-color: red;
+	background-color: #c04646;
 }
 .component-qhe:before {
 	content: "QHE";
 }
 .component-e {
-	background-color: green;
+	background-color: #54be56;
 }
 .component-e:before {
 	content: "E";
 }
 .component-de {
-	background-color: green;
+	background-color: #54be56;
 }
 .component-de:before {
 	content: "DE";
 }
 .component-qe {
-	background-color: green;
+	background-color: #54be56;
 }
 .component-qe:before {
 	content: "QE";
 }
 .component-mo {
-	background-color: blue;
+	background-color: #4d53bf;
 }
 .component-mo:before {
 	content: "MO";
 }
 .component-dmo {
-	background-color: blue;
+	background-color: #4d53bf;
 }
 .component-dmo:before {
 	content: "DMO";
 }
 .component-qmo {
-	background-color: blue;
+	background-color: #4d53bf;
 }
 .component-qmo:before {
 	content: "QMO";
 }
 .component-bs {
-	background-color: brown;
+	background-color: #815a2b;
 }
 .component-bs:before {
-	content: "BS";
+	content: "\01F50B";
 }
 .component-bl {
-	background-color: brown;
+	background-color: #815a2b;
 }
 .component-bl:before {
-	content: "BL";
+	content: "\01F50B\01F50B";
 }
 .component-bxl {
-	background-color: brown;
+	background-color: #815a2b;
 }
 .component-bxl:before {
-	content: "BXL";
+	content: "\01F50B\01F50B\a\01F50B\01F50B";
+    white-space: pre; /* Make new line with \a */
 }
 .component-hd {
-	background-color: darkblue;
+	background-color: #a3b6c5;
 }
 .component-hd:before {
-	content: "HD";
+	content: "\002551\a\002550\002550\00256C\002550\002550\a\002551";
+	white-space: pre; /* Make new line with \a */
+	font-size: 90%;
 }
 .component-cb {
 	background-color: orange;
 }
 .component-cb:before {
-	content: "CB";
+	content: "\002B06\002B07";
+	font-size: 200%;
 }
 .component-pb {
 	background-color: lightblue;
 }
 .component-pb:before {
-	content: "PB";
+	content: "\002B05\002B07";
+	font-size: 200%;
 }
 .component-sb {
 	background-color: silver;
 }
 .component-sb:before {
-	content: "SB";
+	content: "\002B06\0027A1";
+	font-size: 200%;
 }
 .component-gb {
 	background-color: gold;
 }
 .component-gb:before {
-	content: "GB";
+	content: "\002196\002197\a\002199\002198";
+	white-space: pre; /* Make new line with \a */
+	font-size: 150%;
+	font-weight: bold;
 }
 .component-cb1 {
-	background-color: yellow;
+	background-color: #d5e263;
 }
 .component-cb1:before {
 	content: "CB1";
 }
 .component-cb2 {
-	background-color: yellow;
+	background-color: #d5e263;
 }
 .component-cb2:before {
 	content: "CB2";
 }
 .component-cb3 {
-	background-color: yellow;
+	background-color: #d5e263;
 }
 .component-cb3:before {
 	content: "CB3";
 }
 .component-pp {
-	background-color: #868191;
+	background-color: #9791a3;
 }
 .component-pp:before {
 	content: "PP";
 }
 .component-dpp {
-	background-color: #868191;
+	background-color: #9791a3;
 }
 .component-dpp:before {
 	content: "DPP";
 }
 .component-qpp {
-	background-color: #868191;
+	background-color: #9791a3;
 }
 .component-qpp:before {
 	content: "QPP";
