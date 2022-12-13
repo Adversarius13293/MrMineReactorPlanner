@@ -74,7 +74,28 @@ function updateReactorStats() {
 	// Process buffs first.
 	for(var i = 0; i < components.length; i++) {
 		var comp = components[i];
-		// TODO: Buffs
+		if(comp.isProcessed || comp.buffDirections == 0){
+			continue;
+		}
+		// Find matching neighbours.
+		for(var j = 0; j < components.length; j++) {
+			var neigh = components[j];			
+			var diffRow = neigh.position[0] - comp.position[0];
+			var diffCol = neigh.position[1] - comp.position[1];
+			// Could put everything in one if, but that sounds messy.
+			if(((1 & comp.buffDirections) && (diffRow == -1 && diffCol == 0)) // North
+					|| ((2 & comp.buffDirections) && (diffRow == -1 && diffCol == 1))
+					|| ((4 & comp.buffDirections) && (diffRow == 0 && diffCol == 1)) // East
+					|| ((8 & comp.buffDirections) && (diffRow == 1 && diffCol == 1))
+					|| ((16 & comp.buffDirections) && (diffRow == 1 && diffCol == 0)) // South
+					|| ((32 & comp.buffDirections) && (diffRow == 1 && diffCol == -1))
+					|| ((64 & comp.buffDirections) && (diffRow == 0 && diffCol == -1)) // West
+					|| ((128 & comp.buffDirections) && (diffRow == -1 && diffCol == -1))) {
+				// Buff anything. If and what attributes are affected need to be managed by the buffed component.
+				neigh.buff += comp.providedBuff;
+			}
+		}
+		comp.isProcessed = true;
 	}
 	
 	// Then need to process heat transfering elements. To not mark a non transfering heat
@@ -124,8 +145,8 @@ function getHeatSystemMembers(currentComponent, remainingComponents, members) {
 		if(comp.isProcessed){
 			continue;
 		}
-		var diffX = Math.abs(comp.position[0] - currentComponent.position[0]);
-		var diffY = Math.abs(comp.position[1] - currentComponent.position[1]);
+		var diffX = Math.abs(currentComponent.position[0] - comp.position[0]);
+		var diffY = Math.abs(currentComponent.position[1] - comp.position[1]);
 		// Only one step in only one direction, so it is a neighbour.
 		if(diffX + diffY == 1) {
 			if(comp.heat != 0 || comp.doesTransferHeat) {
@@ -149,13 +170,10 @@ function addToRectorStats(components) {
 	for(var j = 0; j < components.length; j++) {
 		comp = components[j];
 		
-		this.heatDiff += comp.heat;
-		if(comp.doesStoreEnergy) {
-			this.batteryCap += comp.totalEnergy;
-		} else {
-			this.energyTotal += comp.totalEnergy;
-			this.energyPerSecond += comp.energyPerSec;				
-		}
+		this.heatDiff += comp.getBuffedHeat();
+		this.energyTotal += comp.getBuffedTotalEnergy();
+		this.batteryCap += comp.getBuffedEnergyStorage();
+		this.energyPerSecond += comp.getBuffedEnergyPerSec();
 	}
 }
 /**
@@ -230,65 +248,65 @@ function createComponentsFromHtml(htmlCell) {
 	var position = htmlCell.id.split('_');
 	if(htmlCell.classList.contains('component-empty')){
 		// I do not need empty cells.
-		// return new Component('Empty', 0, 0, 0, false, false, position, htmlCell);
+		// return new Component('Empty', 0, 0, 0, false, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-fan')){
-		return new Component('Fan', 0, -12, 0, false, false, position, htmlCell);
+		return new Component('Fan', 0, -12, 0, false, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-he')){
-		return new Component('Highly Enriched Uranium Fuel Rod', 10, 24, 36000, true, false, position, htmlCell);
+		return new Component('Highly Enriched Uranium Fuel Rod', 10, 24, 36000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-dhe')){
-		return new Component('Dual Highly Enriched Uranium Fuel Rod', 30, 66, 108000, true, false, position, htmlCell);
+		return new Component('Dual Highly Enriched Uranium Fuel Rod', 30, 66, 108000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-qhe')){
-		return new Component('Quad Highly Enriched Uranium Fuel Rod', 90, 180, 324000, true, false, position, htmlCell);
+		return new Component('Quad Highly Enriched Uranium Fuel Rod', 90, 180, 324000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-e')){
-		return new Component('Enriched Uranium Fuel Rod', 10, 18, 144000, true, false, position, htmlCell);
+		return new Component('Enriched Uranium Fuel Rod', 10, 18, 144000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-de')){
-		return new Component('Dual Enriched Uranium Fuel Rod', 30, 48, 432000, true, false, position, htmlCell);
+		return new Component('Dual Enriched Uranium Fuel Rod', 30, 48, 432000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-qe')){
-		return new Component('Quad Enriched Uranium Fuel Rod', 90, 126, 1296000, true, false, position, htmlCell);
+		return new Component('Quad Enriched Uranium Fuel Rod', 90, 126, 1296000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-mo')){
-		return new Component('Mixed Oxide Fuel Rod', 8, 21, 288000, true, false, position, htmlCell);
+		return new Component('Mixed Oxide Fuel Rod', 8, 21, 288000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-dmo')){
-		return new Component('Dual Mixed Oxide Fuel Rod', 24, 54, 864000, true, false, position, htmlCell);
+		return new Component('Dual Mixed Oxide Fuel Rod', 24, 54, 864000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-qmo')){
-		return new Component('Quad Mixed Oxide Fuel Rod', 72, 144, 2592000, true, false, position, htmlCell);
+		return new Component('Quad Mixed Oxide Fuel Rod', 72, 144, 2592000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-bs')){
-		return new Component('Small Battery', 0, 0, 5000, false, true, position, htmlCell);
+		return new Component('Small Battery', 0, 0, 0, false, 5000, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-bl')){
-		return new Component('Large Battery', 0, 0, 50000, false, true, position, htmlCell);
+		return new Component('Large Battery', 0, 0, 0, false, 50000, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-bxl')){
-		return new Component('Extra Large Battery', 0, 0, 250000, false, true, position, htmlCell);
+		return new Component('Extra Large Battery', 0, 0, 0, false, 250000, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-hd')){
-		return new Component('Heat Duct', 0, 0, 0, true, false, position, htmlCell);
+		return new Component('Heat Duct', 0, 0, 0, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-cb')){
-		return new Component('Copper Buff', 0, 0, 0, false, false, position, htmlCell); // TODO
+		return new Component('Copper Buff', 0, 0, 0, false, false, 0.55, 1+16, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-pb')){
-		return new Component('Platinum Buff', 0, 0, 0, false, false, position, htmlCell); // TODO
+		return new Component('Platinum Buff', 0, 0, 0, false, false, 0.55, 16+64, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-sb')){
-		return new Component('Silver Buff', 0, 0, 0, false, false, position, htmlCell); // TODO
+		return new Component('Silver Buff', 0, 0, 0, false, false, 0.55, 1+4, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-gb')){
-		return new Component('Gold Buff', 0, 0, 0, false, false, position, htmlCell); // TODO
+		return new Component('Gold Buff', 0, 0, 0, false, false, 0.30, 2+8+32+128, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-cb1')){
-		return new Component('Californium Bombardment 1', -10, 24, -288000, true, false, position, htmlCell);
+		return new Component('Californium Bombardment 1', -10, 24, -288000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-cb2')){
-		return new Component('Californium Bombardment 2', -30, 72, -864000, true, false, position, htmlCell);
+		return new Component('Californium Bombardment 2', -30, 72, -864000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-cb3')){
-		return new Component('Californium Bombardment 3', -90, 216, -2592000, true, false, position, htmlCell);
+		return new Component('Californium Bombardment 3', -90, 216, -2592000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-pp')){
-		return new Component('Pu/Po Fuel Rod', 16, 36, 921600, true, false, position, htmlCell);
+		return new Component('Pu/Po Fuel Rod', 16, 36, 921600, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-dpp')){
-		return new Component('Dual Pu/Po Fuel Rod', 48, 96, 2764800, true, false, position, htmlCell);
+		return new Component('Dual Pu/Po Fuel Rod', 48, 96, 2764800, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-qpp')){
-		return new Component('Quad Pu/Po Fuel Rod', 144, 264, 8294400, true, false, position, htmlCell);
+		return new Component('Quad Pu/Po Fuel Rod', 144, 264, 8294400, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-rtg')){
-		return new Component('Polonium RTG Fuel Rod', 6, 15, 1036800, true, false, position, htmlCell);
+		return new Component('Polonium RTG Fuel Rod', 6, 15, 1036800, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-eb1')){
-		return new Component('Einsteinium Bombardment 1', -20, 30, -1152000, true, false, position, htmlCell);
+		return new Component('Einsteinium Bombardment 1', -20, 30, -1152000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-eb2')){
-		return new Component('Einsteinium Bombardment 2', -60, 90, -3456000, true, false, position, htmlCell);
+		return new Component('Einsteinium Bombardment 2', -60, 90, -3456000, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('component-eb3')){
-		return new Component('Einsteinium Bombardment 3', -180, 180, -10368000, true, false, position, htmlCell);
+		return new Component('Einsteinium Bombardment 3', -180, 180, -10368000, true, false, 0, 0, position, htmlCell);
 	} else {
-		// TODO: Unknwon class?
+		document.getElementById('debug').textContent = "Found unhandled type of cell!";
 	}
 }
 
@@ -299,22 +317,47 @@ class Component {
 	totalEnergy;
 //	totalDuration; // Comes from energyPerSec and totalEnergy.
 	doesTransferHeat;
-	doesStoreEnergy;
+	energyStorage;
 	position;
 	/** Used to maybe mark overheated or low on energy components? */
 	htmlElement;
+	providedBuff;
+	/** Binary sum: 1=N 2=NE 4=E 8=SE 16=S 32=SW 64=W 128=NW */
+	buffDirections;
+	buff = 0.0;
 	isProcessed = false;
-	// TODO: Buffs
 	
-	constructor(name, energyPerSec, heat, totalEnergy, doesTransferHeat, doesStoreEnergy, position, htmlElement) {
+	constructor(name, energyPerSec, heat, totalEnergy, doesTransferHeat, energyStorage, providedBuff, buffDirections, position, htmlElement) {
 		this.name = name;
 		this.energyPerSec = energyPerSec;
 		this.heat = heat;
 		this.totalEnergy = totalEnergy;
 		this.doesTransferHeat = doesTransferHeat;
-		this.doesStoreEnergy = doesStoreEnergy;
+		this.energyStorage = energyStorage;
+		this.providedBuff = providedBuff;
+		this.buffDirections = buffDirections;
 		this.position = position;
 		this.htmlElement = htmlElement;
+	}
+	
+	getBuffedEnergyPerSec() {
+		return this.energyPerSec * this.getBuffMultiplier();
+	}
+	
+	getBuffedHeat() {
+		return this.heat * this.getBuffMultiplier();
+	}
+	
+	getBuffedTotalEnergy() {
+		return this.totalEnergy * this.getBuffMultiplier();
+	}
+	
+	getBuffedEnergyStorage() {
+		return this.energyStorage * this.getBuffMultiplier();
+	}
+	
+	getBuffMultiplier() {
+		return this.buff + 1.0;
 	}
 	
 	toString() {
