@@ -49,7 +49,7 @@ function setComponent(forCellId, copyClassFrom) {
 * Starts at level 1 with 3x3, and ends at level 5 with 9x9.
 * Unknown values for level with have all cells enabled.
 */
-function setReactorLevel(level) {
+function setReactorLevel(level, clearEverything = false) {
 	var cells = document.getElementsByClassName('cell');
 	for(var i = 0; i < cells.length; i++) {
 		var cell = cells[i];
@@ -57,6 +57,10 @@ function setReactorLevel(level) {
 		// Always activate everything first.
 		if (cell.hasAttribute('disabled')) {
 			cell.removeAttribute('disabled');
+		}
+		// TODO: Is it a good idea to use this whole function just to clear all cells?
+		if(clearEverything) {
+			cell.className = "cell component-empty";
 		}
 		// Now remove cells as needed.
 		// TODO: Could put everything in one if, but that sounds messy?
@@ -84,6 +88,7 @@ function setReactorLevel(level) {
 			}
 		}
 	}
+	updateReactorStats();
 }
 
 /** Variables for gathering and displaying the reactor stats. */

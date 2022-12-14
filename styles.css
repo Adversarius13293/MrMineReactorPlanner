@@ -64,9 +64,9 @@ body{
 	padding: 0px; /* Heat Duct chars had some problems. */
 }
 
-#level-selection {
+.side-options {
 	display: inline-block; /* Let the div start where it visibly starts. */
-	margin-left: 10px;
+	margin: 10px; /* Some space to the reactor. */
 }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */

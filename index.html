@@ -46,8 +46,8 @@
 		<div class="reactor-container" id="reactor-container">
 			<!-- Filled via javascript. -->
 		</div>
-		<div id="level-selection">Select reactor level:
-			<select name="level" onchange="setReactorLevel(this.value);updateReactorStats()">
+		<div class="side-options">Select reactor level:
+			<select id="level" name="level" onchange="setReactorLevel(this.value)">
 			  <option value="1">Level 1 (3x3)</option>
 			  <option value="2">Level 2 (3x5)</option>
 			  <option value="3">Level 3 (5x5)</option>
@@ -55,6 +55,8 @@
 			  <option value="5" selected="selected">Level 5 (9x9)</option>
 			</select>
 		</div>
+		<br/>
+		<button onclick="setReactorLevel(level.value, true)" class="side-options">Reset reactor</button>
 		<br/>
 		<div id="debug"></div>
 	</body>
