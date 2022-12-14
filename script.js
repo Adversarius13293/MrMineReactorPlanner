@@ -146,24 +146,37 @@ function updateReactorStats() {
 	document.getElementById('feedback_warning').textContent = ' ';
 	// Then need to process heat transfering elements. To not mark a non transfering heat
 	// component as processed, which then later can't be included in a heat system anymore.
+	var foundHeatSystems = [];
 	for(var i = 0; i < components.length; i++) {
 		var comp = components[i];
-		if(comp.isProcessed || !comp.doesTransferHeat){
+		// Skip non transfering (fans) and non heat producing/consuming components (ducts).
+		// They do not initiate a heat system. And won't share other fans without energy.
+		if(comp.isProcessed || (!comp.doesTransferHeat || comp.heat == 0)){
 			continue;
 		}
+		// Unflag fans, so they can be integrated in multiple heat system.
+		var unflaggedFans = setProcessedForHeatNoTransfer(components, false);
+		
 		comp.isProcessed = true;
 		var currentHeatSystem = [];		
 		currentHeatSystem[0] = comp;
+		foundHeatSystems[foundHeatSystems.length] = currentHeatSystem;
 		
 		getHeatSystemMembers(comp, components, currentHeatSystem);
-		// TODO: Test for energy and heat limits.
+		
+		// Reflag unflagged fans again, so they won't be evaluated an extra time by the final loop.
+		setProcessedForHeatNoTransfer(unflaggedFans, true);
+	}
+	// Need to update reactor stats with heat system afterwards, to properly include shared components.
+	for(var i = 0; i < foundHeatSystems.length; i++) {
+		var currentHeatSystem = foundHeatSystems[i];
 		if(getSystemHeat(currentHeatSystem) > 0) {
 			document.getElementById('feedback_warning').textContent = 'At least one component is not cooled enough!';
 		}
 		addToRectorStats(currentHeatSystem);
 	}
 	
-	// In the end process remaining stand-alone components.
+	// In the end, process remaining stand-alone or unused components.
 	for(var i = 0; i < components.length; i++) {
 		var comp = components[i];
 		if(comp.isProcessed){
@@ -184,7 +197,10 @@ function updateReactorStats() {
 	// rod used up
 	// bomb used up
 }
-
+/**
+* Recursivly get all connected heat components, starting from the currentComponent.
+* Will extend the members array with new members.
+*/
 function getHeatSystemMembers(currentComponent, remainingComponents, members) {
 	for(var i = 0; i < remainingComponents.length; i++) {
 		var comp = remainingComponents[i];
@@ -197,6 +213,7 @@ function getHeatSystemMembers(currentComponent, remainingComponents, members) {
 		if(diffX + diffY == 1) {
 			if(comp.heat != 0 || comp.doesTransferHeat) {
 				comp.isProcessed = true;
+				comp.numberOfSystems += 1;
 				members[members.length] = comp;
 				
 				// If it does transfer heat, check its neighbours. Currently only excludes fans.
@@ -207,7 +224,27 @@ function getHeatSystemMembers(currentComponent, remainingComponents, members) {
 		}
 	}
 }
+/**
+* Change isProcessed to the given value, for heat components that do not transfer heat (Fans).
+* Returns all changed components as an array.
+*/
+function setProcessedForHeatNoTransfer(components, isProcessedValue) {
+	var changed = [];
+	for(var i = 0; i < components.length; i++) {
+		var comp = components[i];
+		// Only look at components that have to be changed, and are non transfering heat comps.
+		// Which currently means just fans.
+		if(comp.isProcessed != isProcessedValue && (comp.heat != 0 && !comp.doesTransferHeat)) {
+			comp.isProcessed = isProcessedValue;
+			changed[changed.length] = comp;
+		}
+	}
+	return changed;
+}
 
+/**
+* Get the summed up (buffed) heat of the given components.
+*/
 function getSystemHeat(members) {
 	var systemHeat = 0;
 	for(var i = 0; i < members.length; i++) {
@@ -394,6 +431,8 @@ class Component {
 	providedBuff;
 	/** Binary sum: 1=N 2=NE 4=E 8=SE 16=S 32=SW 64=W 128=NW */
 	buffDirections;
+	/** A fan can be shared by multiple heat systems, and only provides part of its effect to each one. */
+	numberOfSystems = 0;
 	buff = 0.0;
 	isProcessed = false;
 	
@@ -415,7 +454,7 @@ class Component {
 	}
 	
 	getBuffedHeat() {
-		return this.heat * this.getBuffMultiplier();
+		return this.heat * this.getBuffMultiplier()/Math.max(this.numberOfSystems, 1);
 	}
 	
 	getBuffedTotalEnergy() {
