@@ -143,6 +143,7 @@ function updateReactorStats() {
 		comp.isProcessed = true;
 	}
 	
+	document.getElementById('feedback_warning').textContent = ' ';
 	// Then need to process heat transfering elements. To not mark a non transfering heat
 	// component as processed, which then later can't be included in a heat system anymore.
 	for(var i = 0; i < components.length; i++) {
@@ -156,7 +157,9 @@ function updateReactorStats() {
 		
 		getHeatSystemMembers(comp, components, currentHeatSystem);
 		// TODO: Test for energy and heat limits.
-		var systemHeat = 0;
+		if(getSystemHeat(currentHeatSystem) > 0) {
+			document.getElementById('feedback_warning').textContent = 'At least one component is not cooled enough!';
+		}
 		addToRectorStats(currentHeatSystem);
 	}
 	
@@ -203,6 +206,15 @@ function getHeatSystemMembers(currentComponent, remainingComponents, members) {
 			}
 		}
 	}
+}
+
+function getSystemHeat(members) {
+	var systemHeat = 0;
+	for(var i = 0; i < members.length; i++) {
+		var comp = members[i];
+		systemHeat += comp.getBuffedHeat();
+	}
+	return systemHeat;
 }
 
 function addToRectorStats(components) {

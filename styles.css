@@ -14,6 +14,12 @@ body{
   width: 734px;
 }
 
+#feedback_warning {
+	color: darkred;
+	font-weight: bold;
+	white-space: pre; /* Display single whitespace as empty line. */
+}
+
 .reactor-container {
 	display: inline-block; /* For auto minimal width. */
 	background: gray; /* Should not even be visible? */
@@ -200,6 +206,7 @@ body{
 	white-space: pre; /* Make new line with \a */
 	font-size: 150%;
 	font-weight: bold;
+	line-height: 80%; /* Put the two rows of arrows closer together */
 }
 .component-cb1 {
 	background-color: #d5e263;
