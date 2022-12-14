@@ -44,6 +44,47 @@ function setComponent(forCellId, copyClassFrom) {
 	updateReactorStats();
 }
 
+/**  
+* Set the reactor level, which changes the available fields.
+* Starts at level 1 with 3x3, and ends at level 5 with 9x9.
+* Unknown values for level with have all cells enabled.
+*/
+function setReactorLevel(level) {
+	var cells = document.getElementsByClassName('cell');
+	for(var i = 0; i < cells.length; i++) {
+		var cell = cells[i];
+		var position = parsePosition(cell.id);
+		// Always activate everything first.
+		if (cell.hasAttribute('disabled')) {
+			cell.removeAttribute('disabled');
+		}
+		// Now remove cells as needed.
+		// TODO: Could put everything in one if, but that sounds messy?
+		if(level == 4) {
+			if(position[0] == 0 || position[1] == 0 || position[0] == 8 || position[1] == 8
+					|| ((position[0] == 1 || position[0] == 7) && (position[1] == 1 || position[1] == 7))) {
+				// Remove all placed components.
+				cell.className = "cell component-empty";
+				cell.setAttribute('disabled', '');
+			}
+		} else if(level == 3) {
+			if(position[0] < 2 || position[1] < 2 || position[0] > 6 || position[1] > 6) {
+				cell.className = "cell component-empty";
+				cell.setAttribute('disabled', '');
+			}
+		} else if(level == 2) {
+			if(position[0] < 3 || position[1] < 2 || position[0] > 5 || position[1] > 6) {
+				cell.className = "cell component-empty";
+				cell.setAttribute('disabled', '');
+			}
+		} else if(level == 1) {
+			if(position[0] < 3 || position[1] < 3 || position[0] > 5 || position[1] > 5) {
+				cell.className = "cell component-empty";
+				cell.setAttribute('disabled', '');
+			}
+		}
+	}
+}
 
 /** Variables for gathering and displaying the reactor stats. */
 var warningEnergy;
@@ -82,7 +123,6 @@ function updateReactorStats() {
 			var neigh = components[j];			
 			var diffRow = neigh.position[0] - comp.position[0];
 			var diffCol = neigh.position[1] - comp.position[1];
-			// Could put everything in one if, but that sounds messy.
 			if(((1 & comp.buffDirections) && (diffRow == -1 && diffCol == 0)) // North
 					|| ((2 & comp.buffDirections) && (diffRow == -1 && diffCol == 1))
 					|| ((4 & comp.buffDirections) && (diffRow == 0 && diffCol == 1)) // East
@@ -113,8 +153,6 @@ function updateReactorStats() {
 		// TODO: Test for energy and heat limits.
 		var systemHeat = 0;
 		addToRectorStats(currentHeatSystem);
-		
-		//document.getElementById('debug').textContent+= " heat System size: " + currentHeatSystem.length;
 	}
 	
 	// In the end process remaining stand-alone components.
@@ -243,9 +281,24 @@ function getComponentsCss() {
 		'component-rtg', 'component-eb1', 'component-eb2', 'component-eb3'];
 }
 
+/**
+* Id in format 0_3, for first row 4th colum. 
+*/
+function parsePosition(idString) {
+	return idString.split('_');
+}
+
+/**
+* Write something in my debug html element.
+*/
+function logDebug(message, append = false){
+	var currentDate = new Date();
+	document.getElementById('debug').textContent = '[' + currentDate.getHours() + ':'
+			+ currentDate.getMinutes() + ':' + currentDate.getSeconds() + '] ' + message;
+}
+
 function createComponentsFromHtml(htmlCell) {
-	// Id in format 0_3, for first row 4th colum.
-	var position = htmlCell.id.split('_');
+	var position = parsePosition(htmlCell.id);
 	if(htmlCell.classList.contains('component-empty')){
 		// I do not need empty cells.
 		// return new Component('Empty', 0, 0, 0, false, false, 0, 0, position, htmlCell);
@@ -306,7 +359,7 @@ function createComponentsFromHtml(htmlCell) {
 	} else if(htmlCell.classList.contains('component-eb3')){
 		return new Component('Einsteinium Bombardment 3', -180, 180, -10368000, true, false, 0, 0, position, htmlCell);
 	} else {
-		document.getElementById('debug').textContent = "Found unhandled type of cell!";
+		logDebug("Found unhandled type of cell!");
 	}
 }
 

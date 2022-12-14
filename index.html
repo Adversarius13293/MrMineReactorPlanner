@@ -10,8 +10,6 @@
 		<!--div>		
 			TODOs:
 			propper fan-sharing
-			rector size selector
-			buffs
 			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
 			
 			Ideas:
@@ -23,6 +21,8 @@
 			display heat value of each heat system
 			allow drag and drop.
 			"paint" cells via "brush" selected from the side?
+			distinguish more between class and id in css?
+			do not delete components when changing reactor size, until confirmation?
 		</div-->
 		<div class="feedback-container">
 			<div>Energy/Sec: <span id="feedback_eps"></span></div>
@@ -46,6 +46,16 @@
 		<div class="reactor-container" id="reactor-container">
 			<!-- Filled via javascript. -->
 		</div>
-		<div id="debug">Hi!</div>
+		<div id="level-selection">Select reactor level:
+			<select name="level" onchange="setReactorLevel(this.value);updateReactorStats()">
+			  <option value="1">Level 1 (3x3)</option>
+			  <option value="2">Level 2 (3x5)</option>
+			  <option value="3">Level 3 (5x5)</option>
+			  <option value="4">Level 4 (7x7 minus 4)</option>
+			  <option value="5" selected="selected">Level 5 (9x9)</option>
+			</select>
+		</div>
+		<br/>
+		<div id="debug"></div>
 	</body>
 </html>
