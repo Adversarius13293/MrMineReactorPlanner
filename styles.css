@@ -34,11 +34,13 @@ body{
 	float: left; /* Let the dropdown overlay the cell button. */
 	background: lightgray;
 	cursor: pointer;
+	border: 2px solid black;
 }
 
 .cell:disabled {
 	pointer-events: none;
 	background: #313538;
+	border-color: #272a2c;
 }
 #debug {
 	clear: both; /* clear the float of reactor container, to be displayed at the bottom */
