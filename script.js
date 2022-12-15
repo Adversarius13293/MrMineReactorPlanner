@@ -103,6 +103,10 @@ function updateReactorStats() {
 	var cells = document.getElementsByClassName('cell');
 	var components = [];
 	for(var i = 0; i < cells.length; i++) {
+		// Clear overheat border.
+		if (cells[i].classList.contains('cell-overheat')) {
+			cells[i].classList.remove('cell-overheat');
+		}
 		var comp = createComponentsFromHtml(cells[i]);
 		if(comp) {
 			// Ignore null objects.
@@ -172,6 +176,10 @@ function updateReactorStats() {
 		var currentHeatSystem = foundHeatSystems[i];
 		if(getSystemHeat(currentHeatSystem) > 0) {
 			document.getElementById('feedback_warning').textContent = 'At least one component is not cooled enough!';
+			for(var j = 0; j < currentHeatSystem.length; j++) {
+				var comp = currentHeatSystem[j];
+				comp.htmlElement.classList.add('cell-overheat');
+			}
 		}
 		addToRectorStats(currentHeatSystem);
 	}
@@ -185,15 +193,24 @@ function updateReactorStats() {
 		addToRectorStats(comp);
 	}
 	
-	document.getElementById('feedback_eps').textContent = this.energyPerSecond;
-	document.getElementById('feedback_bcap').textContent = this.batteryCap;
+	var elem = document.getElementById('feedback_eps');
+	elem.textContent = formatNumber(this.energyPerSecond);
+	// TODO: Move coloring into function call.
+	clearColors(elem);
+	if(this.energyPerSecond < 0) {
+		elem.classList.add('red');
+	} else if(this.energyPerSecond == 0) {
+		elem.classList.add('green');
+	}
+	
+	document.getElementById('feedback_bcap').textContent = formatNumber(this.batteryCap);
 	if(this.batteryCap == 0 || this.energyPerSecond <= 0) {
 		document.getElementById('feedback_bfull').textContent = '-';
 	} else {
-		document.getElementById('feedback_bfull').textContent = this.batteryCap/this.energyPerSecond;	
+		document.getElementById('feedback_bfull').textContent = formatNumber(this.batteryCap/this.energyPerSecond) + ' s';
 	}
-	document.getElementById('feedback_ediff').textContent = this.energyTotal;
-	document.getElementById('feedback_hdiff').textContent = this.heatDiff;
+	document.getElementById('feedback_ediff').textContent = formatNumber(this.energyTotal);
+	document.getElementById('feedback_hdiff').textContent = formatNumber(this.heatDiff);
 	// rod used up
 	// bomb used up
 }
@@ -333,6 +350,19 @@ function getComponentsCss() {
 		'component-bs', 'component-bl', 'component-bxl', 'component-hd', 'component-cb', 'component-pb', 'component-sb', 'component-gb', 
 		'component-cb1', 'component-cb2', 'component-cb3', 'component-pp', 'component-dpp', 'component-qpp', 
 		'component-rtg', 'component-eb1', 'component-eb2', 'component-eb3'];
+}
+
+function formatNumber(number) {
+	return number.toLocaleString(undefined, {maximumFractionDigits: 2});
+}
+
+function clearColors(htmlElement) {
+	if(htmlElement.classList.contains('red')) {
+		htmlElement.classList.remove('red');
+	}
+	if(htmlElement.classList.contains('green')) {
+		htmlElement.classList.remove('green');
+	}
 }
 
 /**

@@ -15,9 +15,16 @@ body{
 }
 
 #feedback_warning {
-	color: darkred;
+	color: red;
 	font-weight: bold;
 	white-space: pre; /* Display single whitespace as empty line. */
+}
+
+.red {
+	color: darkred;
+}
+.green {
+	color: green;
 }
 
 .reactor-container {
@@ -41,6 +48,9 @@ body{
 	pointer-events: none;
 	background: #313538;
 	border-color: #272a2c;
+}
+.cell-overheat {
+	border-color: red;
 }
 #debug {
 	clear: both; /* clear the float of reactor container, to be displayed at the bottom */
