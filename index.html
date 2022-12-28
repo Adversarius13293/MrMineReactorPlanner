@@ -9,11 +9,9 @@
 		<h1 class="title">Mr.Mine Reactor Planner</h1>
 		<!--div>		
 			TODOs:
-			propper fan-sharing
 			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
 			
 			Ideas:
-			clear button
 			images?
 			export/import?
 			display values in one column? or directly behind the label?
@@ -23,6 +21,8 @@
 			"paint" cells via "brush" selected from the side?
 			distinguish more between class and id in css?
 			do not delete components when changing reactor size, until confirmation?
+			reminder to not use green rods.
+			set initial battery charge
 		</div-->
 		<div class="feedback-container">
 			<div>Energy/Sec: <span id="feedback_eps"></span></div>
@@ -59,6 +59,9 @@
 		<br/>
 		<button onclick="setReactorLevel(level.value, true)" class="side-options">Reset reactor</button>
 		<br/>
+		<div id="exportimport">
+			
+		</div>
 		<div id="debug"></div>
 	</body>
 </html>

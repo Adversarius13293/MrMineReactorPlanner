@@ -80,6 +80,7 @@ body{
 	cursor: pointer;
 	float:left; /* Some alignment problems with mutliple line buttons, so let them float to the left. */
 	padding: 0px; /* Heat Duct chars had some problems. */
+	border: 2px solid black;
 }
 
 .side-options {

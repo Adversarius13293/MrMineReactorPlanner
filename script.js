@@ -288,7 +288,7 @@ function addToRectorStats(components) {
 /**
 * Fill the reactor container with all the cell buttons and a dropdown menu for every button.
 */
-window.onload = function() {	
+window.onload = function() {
 	var reactorContainerNode = document.getElementById('reactor-container');
 	
 	for(var i = 0; i < 9; i++) {
@@ -323,6 +323,8 @@ window.onload = function() {
 		}
 		reactorContainerNode.appendChild(document.createElement('br'));
 	}
+	// Properly initialize all the numbers.
+	updateReactorStats();
 }
 
 function addDropdownOptions(parentNode, cellId) {
