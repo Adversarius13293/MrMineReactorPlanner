@@ -194,6 +194,7 @@ function updateReactorStats() {
 	}
 	
 	var elem = document.getElementById('feedback_eps');
+	this.energyPerSecond = accountForFloatingPointError(this.energyPerSecond);
 	elem.textContent = formatNumber(this.energyPerSecond);
 	// TODO: Move coloring into function call.
 	clearColors(elem);
@@ -268,7 +269,7 @@ function getSystemHeat(members) {
 		var comp = members[i];
 		systemHeat += comp.getBuffedHeat();
 	}
-	return systemHeat;
+	return accountForFloatingPointError(systemHeat);
 }
 
 function addToRectorStats(components) {
@@ -354,8 +355,12 @@ function getComponentsCss() {
 		'component-rtg', 'component-eb1', 'component-eb2', 'component-eb3'];
 }
 
+/**
+* Limit to two decimals, convert -0 to 0, and add thousands separator.
+*/
 function formatNumber(number) {
-	return number.toLocaleString(undefined, {maximumFractionDigits: 2});
+	number = accountForFloatingPointError(number);
+	return number.toLocaleString(undefined, {maximumFractionDigits: 2}).replace('-0','0');
 }
 
 function clearColors(htmlElement) {
@@ -365,6 +370,13 @@ function clearColors(htmlElement) {
 	if(htmlElement.classList.contains('green')) {
 		htmlElement.classList.remove('green');
 	}
+}
+
+function accountForFloatingPointError(number) {
+	// toFixed converts it to a string with the given length.
+	// So parse to number again to remove trailing decimal zeros.
+	// Just a random reasonable looking length.
+	return parseFloat(number.toFixed(8));
 }
 
 /**
