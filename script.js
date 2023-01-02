@@ -211,7 +211,18 @@ function updateReactorStats() {
 		document.getElementById('feedback_bfull').textContent = formatNumber(this.batteryCap/this.energyPerSecond) + ' s';
 	}
 	document.getElementById('feedback_ediff').textContent = formatNumber(this.energyTotal);
-	document.getElementById('feedback_hdiff').textContent = formatNumber(this.heatDiff);
+	
+	elem = document.getElementById('feedback_hdiff');
+	this.heatDiff = accountForFloatingPointError(this.heatDiff);
+	elem.textContent = formatNumber(this.heatDiff);
+	clearColors(elem);
+	if(this.heatDiff > 0) {
+		elem.classList.add('red');
+	} else if(this.heatDiff == 0) {
+		elem.classList.add('green');
+	} else {
+		// Keep default? Or make it green, too?
+	}
 	// rod used up
 	// bomb used up
 }
