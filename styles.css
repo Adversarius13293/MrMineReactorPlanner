@@ -59,6 +59,17 @@ body{
 	background-color: #2980B9;
 }*/
 
+
+#saves-container {
+	overflow: hidden; /* Use the height of the floating children. */
+}
+
+#saves {
+	width: 270px;
+	float: left;
+	overflow: auto; /* Scrollbar on both sides, only if needed. */
+}
+
 .cell-container {
 	position: relative; /* Define the position, later used for the dropdown. */
 	display: inline-block; /* Make the div only as wide as needed, instead over the whole line. */
@@ -86,6 +97,11 @@ body{
 .side-options {
 	display: inline-block; /* Let the div start where it visibly starts. */
 	margin: 10px; /* Some space to the reactor. */
+	width: 400px;
+}
+.side-options button, select, input { /* Some spacing between the elements. Probably not a clean way. */
+	margin-bottom: 5px;
+	margin-right: 5px;
 }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */

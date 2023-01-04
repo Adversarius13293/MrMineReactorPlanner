@@ -23,6 +23,11 @@
 			do not delete components when changing reactor size, until confirmation?
 			reminder to not use green rods.
 			set initial battery charge
+			warning when using too high level comps
+			good setup presets to pick from
+			move and rotate current setup
+			Use more html labels?
+			Somehow the size of the saves selection changes when inserting the first entry.
 		</div-->
 		<div class="feedback-container">
 			<div>Energy/Sec: <span id="feedback_eps"></span></div>
@@ -57,10 +62,36 @@
 			</select>
 		</div>
 		<br/>
-		<button onclick="setReactorLevel(level.value, true)" class="side-options">Reset reactor</button>
+		<div class="side-options">
+			<button onclick="setReactorLevel(level.value, true)">Reset reactor</button>
+		</div>
 		<br/>
-		<div id="exportimport">
-			
+		<div id="exportimportsave" class="side-options">
+		<!-- have a list of saves. 
+		Give them names. ask if override, if name is already saved.
+		load/delete button. 
+		maybe order and edit buttons later?
+		load from url param.
+		maybe multiple via param later?
+		make load from string work with and without url prefix
+		
+		-->
+			<div id="saves-container">
+				<select id="saves" name="saves" size="5">
+				</select>
+				<button onclick="loadLayoutFromString(saves.value)">Load selected</button>
+				<br/>
+				<button onclick="removeSelectedSave()">Delete selected</button>
+				<!--button>Export all entries</button-->
+			</div>
+			<button onclick="queryImportString()">Import layout from string</button>
+			<br/>
+				<label for="layout-name">Layout name:</label>
+				<input type="text" id="layout-name" maxlength="40" value="Reactor 1" oninput="normalizeInputName()"/><br/>
+				
+				<button onclick="addLayoutToSaves(convertLayoutToString())">Save current layout</button>
+				<button onclick="displayExportString()">Export current layout url</button>
+			<br/>
 		</div>
 		<div id="debug"></div>
 	</body>

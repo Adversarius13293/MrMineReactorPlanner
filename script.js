@@ -47,7 +47,7 @@ function setComponent(forCellId, copyClassFrom) {
 /**  
 * Set the reactor level, which changes the available fields.
 * Starts at level 1 with 3x3, and ends at level 5 with 9x9.
-* Unknown values for level with have all cells enabled.
+* Unknown values for level will have all cells enabled.
 */
 function setReactorLevel(level, clearEverything = false) {
 	var cells = document.getElementsByClassName('cell');
@@ -351,6 +351,105 @@ function addDropdownOptions(parentNode, cellId) {
 		}(cellId, componentBtn);
 		parentNode.appendChild(componentBtn);
 	}
+	
+}
+
+var delimiter = '|';
+var delimiterCells = ';';
+
+/**
+* Converts the current reactor layout to one string.
+* Leading with the reactor level, followed by pairs of cell-id 
+* and component css class, everything joined by a delimiter.
+* 
+* Example: TODO
+*/
+function convertLayoutToString() {
+	var result = document.getElementById('layout-name').value + delimiter + document.getElementById('level').value + delimiter;
+	var cells = document.getElementsByClassName('cell');
+	for(var i = 0; i < cells.length; i++) {
+		var htmlCell = cells[i];
+		if(htmlCell.classList.contains('component-empty')){
+			// Skip empty cells to save data.
+			continue;
+		}
+		result = result + htmlCell.id + delimiterCells + getComponentClassOnly(htmlCell) + delimiterCells;
+	}
+	return result;
+	//logDebug(btoa(result));
+}
+
+/**
+* Assumes correctly formated input string.
+*/
+function loadLayoutFromString(layout) {
+	// TODO: Do nothing on empty/wrong input?
+	var splitted = layout.split(delimiter);
+	var name = splitted[0];
+	document.getElementById('layout-name').value = splitted[0];
+	var level = splitted[1];
+	setReactorLevel(level, true);
+	// TODO: Should I set the html select inside the setReactorLevel?
+	// Does not trigger the html onchange event.
+	document.getElementById('level').value = level;
+	var cells = splitted[2].split(delimiterCells);
+	for(var i = 0; i < cells.length-1; i += 2) {
+		var cellId = cells[i];
+		var cssClass = cells[i+1];
+		document.getElementById(cellId).className = 'cell ' + cssClass;
+	}
+	updateReactorStats();
+}
+
+function displayExportString() {
+	alert('Export string of the current layout: ' + getUrlForLayout() + convertLayoutToString());
+}
+
+function getUrlForLayout() {
+	// TODO:
+	return '';
+}
+
+function normalizeInputName() {
+	document.getElementById('layout-name').value = document.getElementById('layout-name').value.replace(delimiter,'').replace(delimiterCells,'');
+}
+
+function queryImportString() {
+	var input = prompt('Please input an import string:');
+	if(input != null) { // Pressing cancel will make it null
+		loadLayoutFromString(input);
+		addLayoutToSaves(input)
+	}
+}
+
+function addLayoutToSaves(layoutString) {
+	// TODO: Check name
+	var selectElement = document.getElementById('saves');
+	var opt = document.createElement('option');
+	opt.value = layoutString;
+	opt.innerHTML = document.getElementById('layout-name').value;
+	opt.selected = true;
+	selectElement.appendChild(opt);
+}
+
+function removeSelectedSave() {
+	var selectElement = document.getElementById('saves');
+	var currentIndex = selectElement.selectedIndex;
+	selectElement.options.remove(currentIndex);
+	currentIndex = Math.min(currentIndex, selectElement.options.length-1);
+	if(currentIndex >= 0) {
+		selectElement.options[currentIndex].selected = true;
+	}
+}
+
+function getComponentClassOnly(htmlElement) {
+	var classes = htmlElement.classList;
+	for(var i = 0; i < classes.length; i++) {
+		if(getComponentsCss().includes(classes[i])) {
+			return classes[i];
+		}
+	}
+	return 'unknown';
 }
 
 /**
