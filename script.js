@@ -60,7 +60,7 @@ function setReactorLevel(level, clearEverything = false) {
 		}
 		// TODO: Is it a good idea to use this whole function just to clear all cells?
 		if(clearEverything) {
-			cell.className = "cell component-empty";
+			cell.className = "cell c-empty";
 		}
 		// Now remove cells as needed.
 		// TODO: Could put everything in one if, but that sounds messy?
@@ -68,22 +68,22 @@ function setReactorLevel(level, clearEverything = false) {
 			if(position[0] == 0 || position[1] == 0 || position[0] == 8 || position[1] == 8
 					|| ((position[0] == 1 || position[0] == 7) && (position[1] == 1 || position[1] == 7))) {
 				// Remove all placed components.
-				cell.className = "cell component-empty";
+				cell.className = "cell c-empty";
 				cell.setAttribute('disabled', '');
 			}
 		} else if(level == 3) {
 			if(position[0] < 2 || position[1] < 2 || position[0] > 6 || position[1] > 6) {
-				cell.className = "cell component-empty";
+				cell.className = "cell c-empty";
 				cell.setAttribute('disabled', '');
 			}
 		} else if(level == 2) {
 			if(position[0] < 3 || position[1] < 2 || position[0] > 5 || position[1] > 6) {
-				cell.className = "cell component-empty";
+				cell.className = "cell c-empty";
 				cell.setAttribute('disabled', '');
 			}
 		} else if(level == 1) {
 			if(position[0] < 3 || position[1] < 3 || position[0] > 5 || position[1] > 5) {
-				cell.className = "cell component-empty";
+				cell.className = "cell c-empty";
 				cell.setAttribute('disabled', '');
 			}
 		}
@@ -312,7 +312,7 @@ window.onload = function() {
 			
 			// The button that displays each cell.
 			var cellBtn = document.createElement('button');
-			cellBtn.className = 'cell component-empty'
+			cellBtn.className = 'cell c-empty'
 			cellBtn.id = i+'_'+j;
 			// All this function-ing feels weird, but seems the only way to make it work.
 			// https://stackoverflow.com/questions/6048561/setting-onclick-to-use-current-value-of-variable-in-loop
@@ -341,7 +341,7 @@ window.onload = function() {
 	var layout = urlParams.get('layout');
 	if(layout) {
 		loadLayoutFromString(layout);
-		addLayoutToSaves(layout);
+		addLayoutToSaves();
 	}
 	// Properly initialize all the numbers.
 	updateReactorStats();
@@ -361,6 +361,7 @@ function addDropdownOptions(parentNode, cellId) {
 	}
 }
 
+//////////////////// Begin export/import/save functionality ////////////////////
 var delimiter = '|';
 var delimiterCells = ';';
 
@@ -376,7 +377,7 @@ var delimiterCells = ';';
 * And all 81 cells are always exported, to get rid of the position part and delimiter.
 * But even then the amount of layouts that can be transported at once in an url is limited to like 20.
 * 
-* Example: Reactor_1|1||3_3;component-fan;3_4;component-bs;3_5;component-fan;4_3;component-he;4_4;component-bs;4_5;component-cb1;5_3;component-fan;5_4;component-bs;5_5;component-fan;
+* Example: Reactor_1|1||3_3;c-fan;3_4;c-bs;3_5;c-fan;4_3;c-he;4_4;c-bs;4_5;c-cb1;5_3;c-fan;5_4;c-bs;5_5;c-fan;
 */
 function convertLayoutToString() {
 	// Last field reserved for something like initial battery.
@@ -384,7 +385,7 @@ function convertLayoutToString() {
 	var cells = document.getElementsByClassName('cell');
 	for(var i = 0; i < cells.length; i++) {
 		var htmlCell = cells[i];
-		if(htmlCell.classList.contains('component-empty')){
+		if(htmlCell.classList.contains('c-empty')){
 			// Skip empty cells to save data.
 			continue;
 		}
@@ -403,6 +404,8 @@ function convertLayoutToString() {
 * Assumes correctly formated input string.
 */
 function loadLayoutFromString(layout) {
+	// An imported layoutString could have been modified by the user, and mess up a lot on the page. 
+	// But its all local, and if a user want's to mess things up for tehm, let them do it?
 	if(!layout) {
 		// No string provided, just do nothing?
 		return false;
@@ -411,8 +414,8 @@ function loadLayoutFromString(layout) {
 	var name = splitted[0];
 	document.getElementById('layout-name').value = splitted[0];
 	var level = splitted[1];
+	// TODO: Should I set the html level inside setReactorLevel()?
 	setReactorLevel(level, true);
-	// TODO: Should I set the html select inside the setReactorLevel?
 	// Does not trigger the html onchange event.
 	document.getElementById('level').value = level;
 	var cells = splitted[3].split(delimiterCells);
@@ -438,57 +441,80 @@ function parseLayoutStringOrUrl(layoutUrl) {
 	}
 }
 
+/**
+* Shows the current reactor layout string including the full url as an alert.
+*/
 function displayExportString() {
 	// Linebreak somehow breaks selecting text with some browsers.
 	//alert('Export string of the current layout:\n' + 
 	alert(getUrlForLayout() + convertLayoutToString());
 }
 
+/**
+* Get the url including the url parameter name for the reactor layout string.
+*/
 function getUrlForLayout() {
 	return location.protocol + '//' + location.host + location.pathname + '?layout='
 }
 
 /**
-* Remove all delimiter characters from user input for the layout name.
+* Let the user import a layout string via prompt.
+* Will do nothing if without any input.
 */
-function normalizeInputName() {
-	document.getElementById('layout-name').value = document.getElementById('layout-name').value.replace(delimiter,'').replace(delimiterCells,'');
-}
-
 function queryImportString() {
 	var input = prompt('Please input an import string:');
 	// Pressing 'cancel' will return null. Empty string is handled with this, too.
 	if(input) {
 		loadLayoutFromString(input);
-		addLayoutToSaves(input);
+		addLayoutToSaves();
 	}
 }
 
+/**
+* Remove all delimiter characters from user input field for the layout name.
+*/
+function normalizeInputName() {
+	document.getElementById('layout-name').value = document.getElementById('layout-name').value
+			.replace(delimiter,'').replace(delimiterCells,'');
+}
+
+/**
+* Add the current reactor layout to the saves list.
+* If you want to save a specific layout, it has to be loaded in first.
+* Will enable load and delete buttons.
+*/
 function addLayoutToSaves(layoutString) {
-	// An imported layoutString could have been modified by the user, and mess up a lot on the page. 
-	// But its all local, and if a user want's to mess things up for tehm, let them do it?
 	var selectElement = document.getElementById('saves');
 	var opt = document.createElement('option');
-	opt.value = parseLayoutStringOrUrl(layoutString);
+	opt.value = parseLayoutStringOrUrl(convertLayoutToString());
 	opt.innerHTML = document.getElementById('layout-name').value;
 	opt.selected = true;
 	selectElement.appendChild(opt);
 	document.getElementById('load-layout').disabled = false;
 	document.getElementById('delete-layout').disabled = false;
 }
-
+/**
+* Removes the currently selected save entry.
+* Automatically selects the next entry.
+* Disables load and delete if it was the last save entry.
+*/
 function removeSelectedSave() {
 	var selectElement = document.getElementById('saves');
 	var currentIndex = selectElement.selectedIndex;
-	selectElement.options.remove(currentIndex);
-	currentIndex = Math.min(currentIndex, selectElement.options.length-1);
+	// Should never be -1 if disabling buttons work, but just to be sure.
 	if(currentIndex >= 0) {
-		selectElement.options[currentIndex].selected = true;
-	} else {
-		document.getElementById('load-layout').disabled = true;
-		document.getElementById('delete-layout').disabled = true;
+		selectElement.options.remove(currentIndex);
+		var newIndex = Math.min(currentIndex, selectElement.options.length-1);
+		if(newIndex >= 0) {
+			selectElement.options[newIndex].selected = true;
+		} else {
+			document.getElementById('load-layout').disabled = true;
+			document.getElementById('delete-layout').disabled = true;
+		}
 	}
 }
+
+////////////////////  ////////////////////
 
 /**
 * Get only the css component part of the object.
@@ -508,14 +534,14 @@ function getComponentClassOnly(htmlElement) {
 * Get all possible reactor component css classes.
 */
 function getComponentsCss() {
-	// TODO: Dynamically read all '.component-' classes from css file?
+	// TODO: Dynamically read all '.c-' classes from css file?
 	// TODO: Or at least use array of Component objects, so the classes are only defined once in javascript.
 	// var sheets = document.styleSheets;
-	return ['component-empty','component-fan', 'component-he', 'component-dhe', 'component-qhe', 
-		'component-e', 'component-de', 'component-qe', 'component-mo', 'component-dmo', 'component-qmo', 
-		'component-bs', 'component-bl', 'component-bxl', 'component-hd', 'component-cb', 'component-pb', 'component-sb', 'component-gb', 
-		'component-cb1', 'component-cb2', 'component-cb3', 'component-pp', 'component-dpp', 'component-qpp', 
-		'component-rtg', 'component-eb1', 'component-eb2', 'component-eb3'];
+	return ['c-empty','c-fan', 'c-he', 'c-dhe', 'c-qhe', 
+		'c-e', 'c-de', 'c-qe', 'c-mo', 'c-dmo', 'c-qmo', 
+		'c-bs', 'c-bl', 'c-bxl', 'c-hd', 'c-cb', 'c-pb', 'c-sb', 'c-gb', 
+		'c-cb1', 'c-cb2', 'c-cb3', 'c-pp', 'c-dpp', 'c-qpp', 
+		'c-rtg', 'c-eb1', 'c-eb2', 'c-eb3'];
 }
 
 /**
@@ -560,64 +586,64 @@ function logDebug(message, append = false){
 
 function createComponentsFromHtml(htmlCell) {
 	var position = parsePosition(htmlCell.id);
-	if(htmlCell.classList.contains('component-empty')){
+	if(htmlCell.classList.contains('c-empty')){
 		// I do not need empty cells.
 		// return new Component('Empty', 0, 0, 0, false, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-fan')){
+	} else if(htmlCell.classList.contains('c-fan')){
 		return new Component('Fan', 0, -12, 0, false, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-he')){
+	} else if(htmlCell.classList.contains('c-he')){
 		return new Component('Highly Enriched Uranium Fuel Rod', 10, 24, 36000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-dhe')){
+	} else if(htmlCell.classList.contains('c-dhe')){
 		return new Component('Dual Highly Enriched Uranium Fuel Rod', 30, 66, 108000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-qhe')){
+	} else if(htmlCell.classList.contains('c-qhe')){
 		return new Component('Quad Highly Enriched Uranium Fuel Rod', 90, 180, 324000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-e')){
+	} else if(htmlCell.classList.contains('c-e')){
 		return new Component('Enriched Uranium Fuel Rod', 10, 18, 144000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-de')){
+	} else if(htmlCell.classList.contains('c-de')){
 		return new Component('Dual Enriched Uranium Fuel Rod', 30, 48, 432000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-qe')){
+	} else if(htmlCell.classList.contains('c-qe')){
 		return new Component('Quad Enriched Uranium Fuel Rod', 90, 126, 1296000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-mo')){
+	} else if(htmlCell.classList.contains('c-mo')){
 		return new Component('Mixed Oxide Fuel Rod', 8, 21, 288000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-dmo')){
+	} else if(htmlCell.classList.contains('c-dmo')){
 		return new Component('Dual Mixed Oxide Fuel Rod', 24, 54, 864000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-qmo')){
+	} else if(htmlCell.classList.contains('c-qmo')){
 		return new Component('Quad Mixed Oxide Fuel Rod', 72, 144, 2592000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-bs')){
+	} else if(htmlCell.classList.contains('c-bs')){
 		return new Component('Small Battery', 0, 0, 0, false, 5000, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-bl')){
+	} else if(htmlCell.classList.contains('c-bl')){
 		return new Component('Large Battery', 0, 0, 0, false, 50000, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-bxl')){
+	} else if(htmlCell.classList.contains('c-bxl')){
 		return new Component('Extra Large Battery', 0, 0, 0, false, 250000, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-hd')){
+	} else if(htmlCell.classList.contains('c-hd')){
 		return new Component('Heat Duct', 0, 0, 0, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-cb')){
+	} else if(htmlCell.classList.contains('c-cb')){
 		return new Component('Copper Buff', 0, 0, 0, false, false, 0.55, 1+16, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-pb')){
+	} else if(htmlCell.classList.contains('c-pb')){
 		return new Component('Platinum Buff', 0, 0, 0, false, false, 0.55, 16+64, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-sb')){
+	} else if(htmlCell.classList.contains('c-sb')){
 		return new Component('Silver Buff', 0, 0, 0, false, false, 0.55, 1+4, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-gb')){
+	} else if(htmlCell.classList.contains('c-gb')){
 		return new Component('Gold Buff', 0, 0, 0, false, false, 0.30, 2+8+32+128, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-cb1')){
+	} else if(htmlCell.classList.contains('c-cb1')){
 		return new Component('Californium Bombardment 1', -10, 24, -288000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-cb2')){
+	} else if(htmlCell.classList.contains('c-cb2')){
 		return new Component('Californium Bombardment 2', -30, 72, -864000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-cb3')){
+	} else if(htmlCell.classList.contains('c-cb3')){
 		return new Component('Californium Bombardment 3', -90, 216, -2592000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-pp')){
+	} else if(htmlCell.classList.contains('c-pp')){
 		return new Component('Pu/Po Fuel Rod', 16, 36, 921600, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-dpp')){
+	} else if(htmlCell.classList.contains('c-dpp')){
 		return new Component('Dual Pu/Po Fuel Rod', 48, 96, 2764800, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-qpp')){
+	} else if(htmlCell.classList.contains('c-qpp')){
 		return new Component('Quad Pu/Po Fuel Rod', 144, 264, 8294400, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-rtg')){
+	} else if(htmlCell.classList.contains('c-rtg')){
 		return new Component('Polonium RTG Fuel Rod', 6, 15, 1036800, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-eb1')){
+	} else if(htmlCell.classList.contains('c-eb1')){
 		return new Component('Einsteinium Bombardment 1', -20, 30, -1152000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-eb2')){
+	} else if(htmlCell.classList.contains('c-eb2')){
 		return new Component('Einsteinium Bombardment 2', -60, 90, -3456000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('component-eb3')){
+	} else if(htmlCell.classList.contains('c-eb3')){
 		return new Component('Einsteinium Bombardment 3', -180, 180, -10368000, true, false, 0, 0, position, htmlCell);
 	} else {
 		logDebug("Found unhandled type of cell!");

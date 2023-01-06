@@ -72,7 +72,7 @@
 			<label for="layout-name">Layout name: </label>
 			<input type="text" id="layout-name" maxlength="40" value="Reactor 1" oninput="normalizeInputName()"/><br/>
 				
-			<button onclick="addLayoutToSaves(convertLayoutToString())" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Save reactor</button>
+			<button onclick="addLayoutToSaves()" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Save reactor</button>
 			<button onclick="displayExportString()">Export reactor</button>
 			<button onclick="queryImportString()">Import from string</button>
 			<div id="saves-container">
