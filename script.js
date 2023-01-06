@@ -335,6 +335,14 @@ window.onload = function() {
 		}
 		reactorContainerNode.appendChild(document.createElement('br'));
 	}
+	
+	// TODO: Move logic into parseLayoutStringOrUrl?
+	var urlParams = new URLSearchParams(window.location.search);
+	var layout = urlParams.get('layout');
+	if(layout) {
+		loadLayoutFromString(layout);
+		addLayoutToSaves(layout);
+	}
 	// Properly initialize all the numbers.
 	updateReactorStats();
 }
@@ -351,7 +359,6 @@ function addDropdownOptions(parentNode, cellId) {
 		}(cellId, componentBtn);
 		parentNode.appendChild(componentBtn);
 	}
-	
 }
 
 var delimiter = '|';
@@ -359,13 +366,21 @@ var delimiterCells = ';';
 
 /**
 * Converts the current reactor layout to one string.
-* Leading with the reactor level, followed by pairs of cell-id 
-* and component css class, everything joined by a delimiter.
+* Leading with the given layout name, reactor level, currently empty column,
+* and at the end pairs of cell-id and component css class.
+* Everything joined by delimiters.
 * 
-* Example: TODO
+* Thoughts:
+* URLs in most cases are limited to 2000 characters. 
+* Could change the string, so that each component is represented by one character, instead of the css class.
+* And all 81 cells are always exported, to get rid of the position part and delimiter.
+* But even then the amount of layouts that can be transported at once in an url is limited to like 20.
+* 
+* Example: Reactor_1|1||3_3;component-fan;3_4;component-bs;3_5;component-fan;4_3;component-he;4_4;component-bs;4_5;component-cb1;5_3;component-fan;5_4;component-bs;5_5;component-fan;
 */
 function convertLayoutToString() {
-	var result = document.getElementById('layout-name').value + delimiter + document.getElementById('level').value + delimiter;
+	// Last field reserved for something like initial battery.
+	var result = document.getElementById('layout-name').value + delimiter + document.getElementById('level').value + delimiter + delimiter;
 	var cells = document.getElementsByClassName('cell');
 	for(var i = 0; i < cells.length; i++) {
 		var htmlCell = cells[i];
@@ -376,15 +391,23 @@ function convertLayoutToString() {
 		result = result + htmlCell.id + delimiterCells + getComponentClassOnly(htmlCell) + delimiterCells;
 	}
 	return result;
-	//logDebug(btoa(result));
+	// Thought about encoding the enitre string as base64.
+	// Mainly to avoid url conflicts with the user defined name.
+	// And to make it harder to manipulate the string.
+	// But being able to read the layouts name from the string is very useful.
+	// So first lets see if it really makes problems without encoding.
+	//return btoa(result);
 }
 
 /**
 * Assumes correctly formated input string.
 */
 function loadLayoutFromString(layout) {
-	// TODO: Do nothing on empty/wrong input?
-	var splitted = layout.split(delimiter);
+	if(!layout) {
+		// No string provided, just do nothing?
+		return false;
+	}
+	var splitted = parseLayoutStringOrUrl(layout).split(delimiter);
 	var name = splitted[0];
 	document.getElementById('layout-name').value = splitted[0];
 	var level = splitted[1];
@@ -392,7 +415,7 @@ function loadLayoutFromString(layout) {
 	// TODO: Should I set the html select inside the setReactorLevel?
 	// Does not trigger the html onchange event.
 	document.getElementById('level').value = level;
-	var cells = splitted[2].split(delimiterCells);
+	var cells = splitted[3].split(delimiterCells);
 	for(var i = 0; i < cells.length-1; i += 2) {
 		var cellId = cells[i];
 		var cssClass = cells[i+1];
@@ -401,35 +424,57 @@ function loadLayoutFromString(layout) {
 	updateReactorStats();
 }
 
+/**
+* Accepts pure layout strings, and urls with the layout parameter, 
+* and returns the pure layout string.
+*/
+function parseLayoutStringOrUrl(layoutUrl) {
+	// TODO: Might want to do some more checks?
+	// TODO: Support multiple layout parameter. Also not just as the first parameter.
+	if(layoutUrl.includes('?layout=')) {
+		return layoutUrl.split('?layout=')[1];
+	} else {
+		return layoutUrl;
+	}
+}
+
 function displayExportString() {
-	alert('Export string of the current layout: ' + getUrlForLayout() + convertLayoutToString());
+	// Linebreak somehow breaks selecting text with some browsers.
+	//alert('Export string of the current layout:\n' + 
+	alert(getUrlForLayout() + convertLayoutToString());
 }
 
 function getUrlForLayout() {
-	// TODO:
-	return '';
+	return location.protocol + '//' + location.host + location.pathname + '?layout='
 }
 
+/**
+* Remove all delimiter characters from user input for the layout name.
+*/
 function normalizeInputName() {
 	document.getElementById('layout-name').value = document.getElementById('layout-name').value.replace(delimiter,'').replace(delimiterCells,'');
 }
 
 function queryImportString() {
 	var input = prompt('Please input an import string:');
-	if(input != null) { // Pressing cancel will make it null
+	// Pressing 'cancel' will return null. Empty string is handled with this, too.
+	if(input) {
 		loadLayoutFromString(input);
-		addLayoutToSaves(input)
+		addLayoutToSaves(input);
 	}
 }
 
 function addLayoutToSaves(layoutString) {
-	// TODO: Check name
+	// An imported layoutString could have been modified by the user, and mess up a lot on the page. 
+	// But its all local, and if a user want's to mess things up for tehm, let them do it?
 	var selectElement = document.getElementById('saves');
 	var opt = document.createElement('option');
-	opt.value = layoutString;
+	opt.value = parseLayoutStringOrUrl(layoutString);
 	opt.innerHTML = document.getElementById('layout-name').value;
 	opt.selected = true;
 	selectElement.appendChild(opt);
+	document.getElementById('load-layout').disabled = false;
+	document.getElementById('delete-layout').disabled = false;
 }
 
 function removeSelectedSave() {
@@ -439,9 +484,16 @@ function removeSelectedSave() {
 	currentIndex = Math.min(currentIndex, selectElement.options.length-1);
 	if(currentIndex >= 0) {
 		selectElement.options[currentIndex].selected = true;
+	} else {
+		document.getElementById('load-layout').disabled = true;
+		document.getElementById('delete-layout').disabled = true;
 	}
 }
 
+/**
+* Get only the css component part of the object.
+* Or 'unknown' if it has none.
+*/
 function getComponentClassOnly(htmlElement) {
 	var classes = htmlElement.classList;
 	for(var i = 0; i < classes.length; i++) {
@@ -457,7 +509,8 @@ function getComponentClassOnly(htmlElement) {
 */
 function getComponentsCss() {
 	// TODO: Dynamically read all '.component-' classes from css file?
-	//var sheets = document.styleSheets;
+	// TODO: Or at least use array of Component objects, so the classes are only defined once in javascript.
+	// var sheets = document.styleSheets;
 	return ['component-empty','component-fan', 'component-he', 'component-dhe', 'component-qhe', 
 		'component-e', 'component-de', 'component-qe', 'component-mo', 'component-dmo', 'component-qmo', 
 		'component-bs', 'component-bl', 'component-bxl', 'component-hd', 'component-cb', 'component-pb', 'component-sb', 'component-gb', 

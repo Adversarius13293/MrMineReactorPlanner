@@ -28,6 +28,8 @@
 			move and rotate current setup
 			Use more html labels?
 			Somehow the size of the saves selection changes when inserting the first entry.
+			Display overall component counts.
+			link to github issues.
 		</div-->
 		<div class="feedback-container">
 			<div>Energy/Sec: <span id="feedback_eps"></span></div>
@@ -63,35 +65,23 @@
 		</div>
 		<br/>
 		<div class="side-options">
-			<button onclick="setReactorLevel(level.value, true)">Reset reactor</button>
+			<button onclick="setReactorLevel(level.value, true)">Clear reactor</button>
 		</div>
 		<br/>
 		<div id="exportimportsave" class="side-options">
-		<!-- have a list of saves. 
-		Give them names. ask if override, if name is already saved.
-		load/delete button. 
-		maybe order and edit buttons later?
-		load from url param.
-		maybe multiple via param later?
-		make load from string work with and without url prefix
-		
-		-->
+			<label for="layout-name">Layout name: </label>
+			<input type="text" id="layout-name" maxlength="40" value="Reactor 1" oninput="normalizeInputName()"/><br/>
+				
+			<button onclick="addLayoutToSaves(convertLayoutToString())" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Save reactor</button>
+			<button onclick="displayExportString()">Export reactor</button>
+			<button onclick="queryImportString()">Import from string</button>
 			<div id="saves-container">
 				<select id="saves" name="saves" size="5">
 				</select>
-				<button onclick="loadLayoutFromString(saves.value)">Load selected</button>
-				<br/>
-				<button onclick="removeSelectedSave()">Delete selected</button>
-				<!--button>Export all entries</button-->
+				<button onclick="loadLayoutFromString(saves.value)" id="load-layout" disabled="">Load selected</button>
+				<button onclick="removeSelectedSave()" id="delete-layout" disabled="">Delete selected</button>
+				<!--button>Export all?</button-->
 			</div>
-			<button onclick="queryImportString()">Import layout from string</button>
-			<br/>
-				<label for="layout-name">Layout name:</label>
-				<input type="text" id="layout-name" maxlength="40" value="Reactor 1" oninput="normalizeInputName()"/><br/>
-				
-				<button onclick="addLayoutToSaves(convertLayoutToString())">Save current layout</button>
-				<button onclick="displayExportString()">Export current layout url</button>
-			<br/>
 		</div>
 		<div id="debug"></div>
 	</body>

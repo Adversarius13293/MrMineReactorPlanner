@@ -1,7 +1,7 @@
 body{
 	padding: 25px;
 	padding-top: 0px;
-	color: gray;
+	color: lightgray;
 	background-color: #1f272e;
 }
 .title {
@@ -59,15 +59,22 @@ body{
 	background-color: #2980B9;
 }*/
 
-
 #saves-container {
 	overflow: hidden; /* Use the height of the floating children. */
+}
+
+#saves-container button {
+	min-width: 110px; /* Make Load and Delete button same width. */
 }
 
 #saves {
 	width: 270px;
 	float: left;
 	overflow: auto; /* Scrollbar on both sides, only if needed. */
+}
+
+#saves option {
+	border-left: 2px solid lightgreen;
 }
 
 .cell-container {
