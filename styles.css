@@ -19,6 +19,9 @@ body{
 	font-weight: bold;
 	white-space: pre-wrap; /* Display single whitespace as empty line, but also still auto warp. */
 }
+#feedback-hint {
+	color: orange;
+}
 
 .red {
 	color: darkred;

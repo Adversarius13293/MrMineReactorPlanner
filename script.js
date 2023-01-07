@@ -104,7 +104,8 @@ function updateReactorStats() {
 	var components = [];
 	
 	// Things for displaying warnings.
-	document.getElementById('feedback-warning').textContent = ' ';
+	document.getElementById('feedback-warning').textContent = '';
+	document.getElementById('feedback-hint').textContent = '';
 	var levelExceeded = false;
 	var overheated = false;
 	var usedGreenUranium = false;
@@ -241,8 +242,10 @@ function updateReactorStats() {
 		document.getElementById('feedback-warning').textContent += 'At least one component is not cooled enough! ';
 	}
 	if(usedGreenUranium) {
-		document.getElementById('feedback-warning').textContent += 'You are using the green Enriched Uranium Fuel Rods, which is strongly advised against for isotope balance reasons. ';
+		document.getElementById('feedback-hint').textContent += 'You are using the green Enriched Uranium Fuel Rods, which is strongly advised against for isotope balance reasons. ';
 	}
+	// To have at least an empty line, if everything else is false.
+	document.getElementById('feedback-warning').textContent += ' ';
 }
 /**
 * Recursivly get all connected heat components, starting from the currentComponent.
