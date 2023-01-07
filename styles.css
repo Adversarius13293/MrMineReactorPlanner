@@ -14,10 +14,10 @@ body{
   width: 734px;
 }
 
-#feedback_warning {
+#feedback-warning {
 	color: red;
 	font-weight: bold;
-	white-space: pre; /* Display single whitespace as empty line. */
+	white-space: pre-wrap; /* Display single whitespace as empty line, but also still auto warp. */
 }
 
 .red {

@@ -104,9 +104,10 @@ function updateReactorStats() {
 	var components = [];
 	
 	// Things for displaying warnings.
-	document.getElementById('feedback_warning').textContent = ' ';
+	document.getElementById('feedback-warning').textContent = ' ';
 	var levelExceeded = false;
 	var overheated = false;
+	var usedGreenUranium = false;
 	
 	for(var i = 0; i < cells.length; i++) {
 		var comp = createComponentsFromHtml(cells[i]);
@@ -116,6 +117,10 @@ function updateReactorStats() {
 			components[components.length] = comp;			
 			if(document.getElementById('level').value < comp.minLevel) {
 				levelExceeded = true;
+			}
+			if('Enriched Uranium Fuel Rod' == comp.name || 'Dual Enriched Uranium Fuel Rod' == comp.name
+					|| 'Quad Enriched Uranium Fuel Rod' == comp.name) {
+				usedGreenUranium = true;
 			}
 		}
 	}
@@ -230,10 +235,13 @@ function updateReactorStats() {
 	// bomb used up
 	
 	if(levelExceeded) {
-		document.getElementById('feedback_warning').textContent = 'You are using components that are not available for the selected reactor level. ';
+		document.getElementById('feedback-warning').textContent = 'You are using components that are not available for the selected reactor level. ';
 	}
 	if(overheated) {
-		document.getElementById('feedback_warning').textContent += 'At least one component is not cooled enough! ';
+		document.getElementById('feedback-warning').textContent += 'At least one component is not cooled enough! ';
+	}
+	if(usedGreenUranium) {
+		document.getElementById('feedback-warning').textContent += 'You are using the green Enriched Uranium Fuel Rods, which is strongly advised against for isotope balance reasons. ';
 	}
 }
 /**
