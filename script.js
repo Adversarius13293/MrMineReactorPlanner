@@ -616,8 +616,7 @@ function parsePosition(idString) {
 */
 function logDebug(message, append = false){
 	var currentDate = new Date();
-	document.getElementById('debug').textContent = '[' + currentDate.getHours() + ':'
-			+ currentDate.getMinutes() + ':' + currentDate.getSeconds() + '] ' + message;
+		document.getElementById('debug').textContent = '[' + currentDate.toISOString().substring(11, 19) + '] ' + message;
 }
 
 function createComponentsFromHtml(htmlCell) {
