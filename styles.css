@@ -95,13 +95,14 @@ body{
 	margin: 5px; /* To not exactly overlay the cell button, but rather shiftet a bit to the bottom right. */
 }
 
-.dropdown-content button {
+.dropdown-content button, #quick-build-button {
 	width: 50px;
 	height: 50px;
 	cursor: pointer;
-	float:left; /* Some alignment problems with mutliple line buttons, so let them float to the left. */
+	float: left; /* Some alignment problems with mutliple line buttons, so let them float to the left. */
 	padding: 0px; /* Heat Duct chars had some problems. */
 	border: 2px solid black;
+	margin: 0px !important; /* To override the side options style, for quick-build dropdown. */
 }
 
 .side-options {

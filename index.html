@@ -14,12 +14,10 @@
 			display values in one column? or directly behind the label?
 			autoformat stat labels
 			display heat value of each heat system
-			allow drag and drop.
-			"paint" cells via "brush" selected from the side?
+			allow drag and drop?
 			distinguish more between class and id in css?
 			do not delete components when changing reactor size, until confirmation?
 			set initial battery charge
-			warning when using too high level comps
 			good setup presets to pick from
 			move and rotate current setup
 			Use more html labels?
@@ -81,6 +79,15 @@
 				<!--button>Export all?</button-->
 			</div>
 		</div>
+		<br/>
+		<div id="quick-build" class="side-options">
+			<input type="checkbox" id="use-quick-build" >Use quick-build</input>
+			<button onclick="onCellClick('quick-build-dropdown', this)" id="quick-build-button" class="c-empty"></button>
+			<div id="quick-build-dropdown" class="dropdown-content">
+				<!-- Filled via javascript. -->
+			</div>
+		</div>
+		</br/>
 		<div id="debug"></div>
 	</body>
 </html>

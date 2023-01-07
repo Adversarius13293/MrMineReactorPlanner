@@ -1,12 +1,18 @@
 /**
 * Toggle between hiding and showing the dropdown on button click. Hides other cells dropdowns.
+* If quick build is active, immediately set the cells new component.
 */
-function toggleDropdown(elementId) {
-	var shown = document.getElementById(elementId).classList.contains('show');
+function onCellClick(dropdownId, caller) {
+	var wasShown = document.getElementById(dropdownId).classList.contains('show');
+	// Hide previous dropdowns, in case multiple cells are clicked without selecting a component.
 	hideDropdowns();
-	if(!shown){
-		// All dropdowns are allready hidden. Only change something if it needs to be shown.
-		document.getElementById(elementId).classList.toggle('show');
+	if(caller.id != 'quick-build-button' && document.getElementById('use-quick-build').checked) {
+		setComponent(caller.id, document.getElementById('quick-build-button'));
+	} else {
+		if(!wasShown){
+			// All dropdowns are allready hidden. Only change something if it's supposed to be shown.
+			document.getElementById(dropdownId).classList.toggle('show');
+		}
 	}
 }
 
@@ -14,7 +20,7 @@ function toggleDropdown(elementId) {
 * Close the dropdown if clicked outside of any cell button.
 */
 window.onclick = function(event) {
-	if (!event.target.matches('.cell')) {
+	if (!event.target.matches('.cell') && !event.target.matches('#quick-build-button')) {
 		hideDropdowns();
 	}
 }
@@ -23,7 +29,6 @@ window.onclick = function(event) {
 */
 function hideDropdowns() {
 	var dropdowns = document.getElementsByClassName('dropdown-content');
-	var i;
 	for (var i = 0; i < dropdowns.length; i++) {
 		var openDropdown = dropdowns[i];
 		if (openDropdown.classList.contains('show')) {
@@ -38,10 +43,15 @@ function hideDropdowns() {
 function setComponent(forCellId, copyClassFrom) {
 	var styleClass = copyClassFrom.className;
 	var cell = document.getElementById(forCellId);
-	if (!cell.classList.contains(styleClass)) {
-		cell.className = "cell " + styleClass;
+	// Don't make it a cell and update reactor, if it's the quick build select for example.
+	if(cell.classList.contains('cell')) {
+		if (!cell.classList.contains(styleClass)) {
+			cell.className = "cell " + styleClass;
+		}
+		updateReactorStats();
+	} else {
+		cell.className = styleClass;
 	}
-	updateReactorStats();
 }
 
 /**  
@@ -337,11 +347,11 @@ window.onload = function() {
 			cellBtn.id = i+'_'+j;
 			// All this function-ing feels weird, but seems the only way to make it work.
 			// https://stackoverflow.com/questions/6048561/setting-onclick-to-use-current-value-of-variable-in-loop
-			cellBtn.onclick = function(arg) {
+			cellBtn.onclick = function(arg, arg2) {
 				return function() {
-					toggleDropdown(arg);					
+					onCellClick(arg, arg2);					
 				}
-			}('dropdown_'+i+'_'+j);
+			}('dropdown_'+i+'_'+j, cellBtn);
 			cellContainer.appendChild(cellBtn);
 			
 			// Div for the selection dropdown of each cell, hidden by default.
@@ -356,6 +366,8 @@ window.onload = function() {
 		}
 		reactorContainerNode.appendChild(document.createElement('br'));
 	}
+	
+	addDropdownOptions(document.getElementById('quick-build-dropdown'), 'quick-build-button')
 	
 	// TODO: Move logic into parseLayoutStringOrUrl?
 	var urlParams = new URLSearchParams(window.location.search);
