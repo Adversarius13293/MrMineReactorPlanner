@@ -81,7 +81,7 @@ function updateCompDescription() {
 			description.innerHTML += 'Total Energy Production: ' + formatNumber(comp.totalEnergy) + '<br/>';
 		}
 		if(comp.totalEnergy != 0 && comp.energyPerSec != 0) {
-			description.innerHTML += 'Total Duration: ' + formatTime(comp.getTotalDuration()) + '<br/>';
+			description.innerHTML += 'Total Duration: ' + formatTime(comp.getBuffedTotalDuration()) + '<br/>';
 		}
 		if(comp.energyStorage != 0) {
 			description.innerHTML += 'Stores ' + formatNumber(comp.energyStorage) + ' energy<br/>';
@@ -376,7 +376,7 @@ function addToRectorStats(components) {
 		comp = components[j];
 		
 		this.heatDiff += comp.getBuffedHeat();
-		this.energyTotal += comp.getBuffedTotalEnergy();
+		this.energyTotal += comp.totalEnergy;
 		this.batteryCap += comp.getBuffedEnergyStorage();
 		this.energyPerSecond += comp.getBuffedEnergyPerSec();
 	}
@@ -834,11 +834,11 @@ class Component {
 		this.htmlElement = htmlElement;
 	}
 	
-	getTotalDuration() {
+	getBuffedTotalDuration() {
 		if(this.totalEnergy == 0 || this.energyPerSec == 0) {
 			return 0;
 		} else {
-			return this.totalEnergy/this.energyPerSec;
+			return this.totalEnergy/this.getBuffedEnergyPerSec();
 		}
 	}
 	
@@ -848,10 +848,6 @@ class Component {
 	
 	getBuffedHeat() {
 		return this.heat * this.getBuffMultiplier()/Math.max(this.numberOfSystems, 1);
-	}
-	
-	getBuffedTotalEnergy() {
-		return this.totalEnergy * this.getBuffMultiplier();
 	}
 	
 	getBuffedEnergyStorage() {
