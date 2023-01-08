@@ -218,28 +218,28 @@ body{
 	font-size: 90%;
 }
 .c-cb {
-	background-color: orange;
+	background-color: #d17534;
 }
 .c-cb:before {
 	content: "\002B06\002B07";
 	font-size: 200%;
 }
 .c-pb {
-	background-color: lightblue;
+	background-color: #8ca0cb;
 }
 .c-pb:before {
 	content: "\002B05\002B07";
 	font-size: 200%;
 }
 .c-sb {
-	background-color: silver;
+	background-color: #b1b6b6;
 }
 .c-sb:before {
 	content: "\002B06\0027A1";
 	font-size: 200%;
 }
 .c-gb {
-	background-color: gold;
+	background-color: #dab249;
 }
 .c-gb:before {
 	content: "\002196\002197\a\002199\002198";
@@ -285,25 +285,25 @@ body{
 	content: "QPP";
 }
 .c-rtg {
-	background-color: pink;
+	background-color: #a14e70;
 }
 .c-rtg:before {
 	content: "RTG";
 }
 .c-eb1 {
-	background-color: cyan;
+	background-color: #57a1b3;
 }
 .c-eb1:before {
 	content: "EB1";
 }
 .c-eb2 {
-	background-color: cyan;
+	background-color: #57a1b3;
 }
 .c-eb2:before {
 	content: "EB2";
 }
 .c-eb3 {
-	background-color: cyan;
+	background-color: #57a1b3;
 }
 .c-eb3:before {
 	content: "EB3";
