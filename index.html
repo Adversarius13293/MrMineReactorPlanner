@@ -9,21 +9,25 @@
 		<h1 class="title">Mr.Mine Reactor Planner</h1>
 		<!--div>
 			Ideas:
-			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
-			images?
-			display values in one column? or directly behind the label?
-			display heat value of each heat system
-			allow drag and drop?
-			distinguish more between class and id in css?
+			display heat value and member of each heat system
+			allow drag and drop to build? or shift click?
 			do not delete components when changing reactor size, until confirmation?
 			set initial battery charge
 			good setup presets to pick from
 			move and rotate current setup
-			Use more html labels?
-			Somehow the size of the saves selection changes when inserting the first entry.
 			Display overall component counts.
 			link to github issues.
 			Mark too high level components already in dropdown while building?
+			
+			Design:
+			images?
+			display values in one column? or directly behind the label?
+			distinguish more between class and id in css?
+			Use more html labels?
+			
+			Bugs:
+			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
+			Somehow the size of the saves selection changes when inserting the first entry.
 		</div-->
 		<div class="feedback-container">
 			<div>Energy/Sec: <span id="feedback_eps"></span></div>
@@ -32,6 +36,8 @@
 			<div>Overall energy balance: <span id="feedback_ediff"></span></div>
 			<div>Overall heat balance: <span id="feedback_hdiff"></span></div>
 			<!--div>Fuel rod used up in: <span id="feedback_fup"></span></div>
+			<div>Fastest rod used up in: </div>
+			<div>Slowest rod used up in: </div>
 			<div>Bombardment used up in: <span id="feedback_bup"></span></div>
 			<div>Needed fuel replacements: <span id="feedback_frep"></span></div>
 			<div>Needed bombardment replacements: <span id="feedback_brep"></span></div-->
@@ -41,6 +47,7 @@
 				display rod and bomb stats for each rod and bomb type?
 				free battery at the end
 				wasted energy
+				complex energy usage: initial battery charge. negative eps, changing, not changing rods, only changing fuel rods.
 			-->
 		</div>
 		<div id="feedback-warning"> </div>
