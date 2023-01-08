@@ -24,17 +24,18 @@
 			display values in one column? or directly behind the label?
 			distinguish more between class and id in css?
 			Use more html labels?
+			Stats tooltip trigger currently expands over the whole grid cell, and not just the visible text.
 			
 			Bugs:
 			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
 			Somehow the size of the saves selection changes when inserting the first entry.
 		</div-->
 		<div class="feedback-container">
-			<div>Energy/Sec: <span id="feedback_eps"></span></div>
-			<div>Battery capacity: <span id="feedback_bcap"></span></div>
-			<div>Battery full in: <span id="feedback_bfull"></span></div>
-			<div>Overall energy balance: <span id="feedback_ediff"></span></div>
-			<div>Overall heat balance: <span id="feedback_hdiff"></span></div>
+			<div title="Energy per second, like shown ingame.">Energy/Sec: <span id="feedback_eps"></span></div>
+			<div title="Red text means the battery capacity isn't sufficient.">Battery capacity: <span id="feedback_bcap"></span></div>
+			<div title="After what time the batteries would be full, if empty rods get replaced.">Battery full in: <span id="feedback_bfull"></span></div>
+			<div title="The energy you end up with after all rods are finished. Without replacing any and assuming enough batteries.">Overall energy balance: <span id="feedback_ediff"></span></div>
+			<div title="Combines the heat of all components, even isolated fans. A negative number is good, but doesn't necessarily mean everything is properly cooled.">Overall heat balance: <span id="feedback_hdiff"></span></div>
 			<!--div>Fuel rod used up in: <span id="feedback_fup"></span></div>
 			<div>Fastest rod used up in: </div>
 			<div>Slowest rod used up in: </div>
