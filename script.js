@@ -270,7 +270,7 @@ function updateReactorStats() {
 	if(this.batteryCap == 0 || this.energyPerSecond <= 0) {
 		document.getElementById('feedback_bfull').textContent = '-';
 	} else {
-		document.getElementById('feedback_bfull').textContent = formatNumber(this.batteryCap/this.energyPerSecond) + ' s';
+		document.getElementById('feedback_bfull').textContent = formatTime(this.batteryCap/this.energyPerSecond);
 	}
 	document.getElementById('feedback_ediff').textContent = formatNumber(this.energyTotal);
 	
@@ -631,11 +631,62 @@ function formatNumber(number) {
 	}
 }
 
+/**
+* Returns a string representation of the given seconds in its time units.
+* Will omit the highest and lowest units if they are all 0.
+*
+* Example outputs:
+* 1d 2:00:04h
+* 5d
+* 40:20m
+* 12s
+*/
 function formatTime(seconds) {
-	var date = new Date(0);
-	date.setSeconds(seconds);
-	// TODO: Currently cuts of if more than 24 hours.
-	return date.toISOString().substring(11, 19) + 'h';
+	// TODO: Support miliseconds?
+	seconds = Math.round(seconds)
+	if(seconds == 0){
+		return '0s';
+	}
+	var isNegative = false;
+	if(seconds < 0) {
+		isNegative = true;
+		seconds *= -1;
+	}
+	var d = (seconds/(60*60*24)) | 0;
+	var h = (seconds/(60*60))%24 | 0;
+	var m = (seconds/(60))%60 | 0;
+	var s = seconds%60 | 0;
+	
+	var timeString = '';
+	var unit;
+	if(isNegative) {
+		timeString = '-'
+	}
+	if(d != 0) {
+		timeString += d + 'd '
+	}
+	if(h != 0) {
+		timeString += h;
+		unit = 'h';
+	}
+	if(unit && (m != 0 || s != 0)) {
+		timeString += ':' + m.toLocaleString(undefined, {minimumIntegerDigits: 2});
+	} else if(m != 0) {
+		// TODO: Use m instead? But that looks so much like meter...
+		//       Reactor times ingame seem only to start at hours.
+		unit = 'min';
+		timeString += m;
+	}
+	if(unit && s != 0) {
+		timeString += ':' + s.toLocaleString(undefined, {minimumIntegerDigits: 2});
+	} else if(s != 0) {
+		unit = 's';
+		timeString += s;
+	}
+	if(unit) {
+		timeString += unit;
+	}
+	return timeString;
 }
 
 function clearDecorations(htmlElement) {
