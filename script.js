@@ -267,12 +267,21 @@ function updateReactorStats() {
 		elem.classList.add('green');
 	}
 	
-	document.getElementById('feedback_bcap').textContent = formatNumber(this.batteryCap);
+	elem = document.getElementById('feedback_bcap');
+	elem.textContent = formatNumber(this.batteryCap);
+	clearDecorations(elem);
+	if(this.batteryCap < this.energyTotal || (this.energyTotal < 0 && this.batteryCap < this.energyTotal*-1)) {
+		elem.classList.add('red');
+	} else if(this.batteryCap > this.energyTotal) {
+		elem.classList.add('green');
+	}
+	
 	if(this.batteryCap == 0 || this.energyPerSecond <= 0) {
 		document.getElementById('feedback_bfull').textContent = '-';
 	} else {
 		document.getElementById('feedback_bfull').textContent = formatTime(this.batteryCap/this.energyPerSecond);
 	}
+	
 	document.getElementById('feedback_ediff').textContent = formatNumber(this.energyTotal);
 	
 	elem = document.getElementById('feedback_hdiff');
