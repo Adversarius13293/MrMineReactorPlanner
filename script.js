@@ -51,6 +51,48 @@ function setComponent(forCellId, copyClassFrom) {
 		updateReactorStats();
 	} else {
 		cell.className = styleClass;
+		updateCompDescription();
+	}
+}
+
+function updateCompDescription() {
+	var comp = createComponentFromHtml(document.getElementById('quick-build-button'));
+	var description = document.getElementById('comp-description');
+	description.innerHTML = '';
+	// Tried to keep the format close to the ingame display.
+	if(comp != null) {
+		description.innerHTML += '<b>' + comp.name + '</b><br/>';
+		if(comp.energyPerSec != 0) {
+			description.innerHTML += 'Energy: ' + formatNumber(comp.energyPerSec) + '/sec';
+			if(comp.heat != 0) {
+				description.innerHTML += ' (' + formatNumber(comp.energyPerSec/comp.heat) + ' energy/heat)';
+			}
+			description.innerHTML += '<br/>';
+		}
+		if(comp.heat != 0) {
+			description.innerHTML += 'Heat: ' + formatNumber(comp.heat) + '/sec';
+			if(comp.heat > 0){
+				// TODO: Do not hard code the fan heat? If the value gets changed, nobody will remember this part.
+				description.innerHTML += ' (' + formatNumber(comp.heat/12)+' fans)';
+			}
+			description.innerHTML += '<br/>'
+		}
+		if(comp.totalEnergy != 0) {
+			description.innerHTML += 'Total Energy Production: ' + formatNumber(comp.totalEnergy) + '<br/>';
+		}
+		if(comp.totalEnergy != 0 && comp.energyPerSec != 0) {
+			description.innerHTML += 'Total Duration: ' + formatTime(comp.getTotalDuration()) + '<br/>';
+		}
+		if(comp.energyStorage != 0) {
+			description.innerHTML += 'Stores ' + formatNumber(comp.energyStorage) + ' energy<br/>';
+		}
+		// Technically rods should get this text too. But they don't do in the game either.
+		if(comp.doesTransferHeat && comp.heat == 0) {
+			description.innerHTML += 'Connects different heat components together<br/>';
+		}
+		if(comp.providedBuff != 0) {
+			description.innerHTML += 'Boosts components by '+formatNumber(comp.providedBuff*100)+'% in each direction<br/>';
+		}
 	}
 }
 
@@ -121,7 +163,7 @@ function updateReactorStats() {
 	var usedGreenUranium = false;
 	
 	for(var i = 0; i < cells.length; i++) {
-		var comp = createComponentsFromHtml(cells[i]);
+		var comp = createComponentFromHtml(cells[i]);
 		// Ignore null objects.
 		if(comp) {
 			clearDecorations(cells[i]);
@@ -568,8 +610,8 @@ function getComponentClassOnly(htmlElement) {
 */
 function getComponentsCss() {
 	// TODO: Dynamically read all '.c-' classes from css file?
-	// TODO: Or at least use array of Component objects, so the classes are only defined once in javascript.
 	// var sheets = document.styleSheets;
+	// TODO: Or at least use array of Component objects, so the classes are only defined once in javascript.
 	return ['c-empty','c-fan', 'c-he', 'c-dhe', 'c-qhe', 
 		'c-e', 'c-de', 'c-qe', 'c-mo', 'c-dmo', 'c-qmo', 
 		'c-bs', 'c-bl', 'c-bxl', 'c-hd', 'c-cb', 'c-pb', 'c-sb', 'c-gb', 
@@ -582,7 +624,18 @@ function getComponentsCss() {
 */
 function formatNumber(number) {
 	number = accountForFloatingPointError(number);
-	return number.toLocaleString(undefined, {maximumFractionDigits: 2}).replace('-0','0');
+	if(number == -0) {
+		return 0;
+	} else {
+		return number.toLocaleString(undefined, {maximumFractionDigits: 2});
+	}
+}
+
+function formatTime(seconds) {
+	var date = new Date(0);
+	date.setSeconds(seconds);
+	// TODO: Currently cuts of if more than 24 hours.
+	return date.toISOString().substring(11, 19) + 'h';
 }
 
 function clearDecorations(htmlElement) {
@@ -619,7 +672,7 @@ function logDebug(message, append = false){
 		document.getElementById('debug').textContent = '[' + currentDate.toISOString().substring(11, 19) + '] ' + message;
 }
 
-function createComponentsFromHtml(htmlCell) {
+function createComponentFromHtml(htmlCell) {
 	var position = parsePosition(htmlCell.id);
 	if(htmlCell.classList.contains('c-empty')){
 		// I do not need empty cells.
@@ -717,6 +770,14 @@ class Component {
 		this.buffDirections = buffDirections;
 		this.position = position;
 		this.htmlElement = htmlElement;
+	}
+	
+	getTotalDuration() {
+		if(this.totalEnergy == 0 || this.energyPerSec == 0) {
+			return 0;
+		} else {
+			return this.totalEnergy/this.energyPerSec;
+		}
 	}
 	
 	getBuffedEnergyPerSec() {
