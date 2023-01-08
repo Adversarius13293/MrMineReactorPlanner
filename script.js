@@ -260,6 +260,7 @@ function updateReactorStats() {
 	this.energyPerSecond = accountForFloatingPointError(this.energyPerSecond);
 	elem.textContent = formatNumber(this.energyPerSecond);
 	// TODO: Move coloring into function call.
+	clearDecorations(elem);
 	if(this.energyPerSecond < 0) {
 		elem.classList.add('red');
 	} else if(this.energyPerSecond == 0) {
@@ -277,6 +278,7 @@ function updateReactorStats() {
 	elem = document.getElementById('feedback_hdiff');
 	this.heatDiff = accountForFloatingPointError(this.heatDiff);
 	elem.textContent = formatNumber(this.heatDiff);
+	clearDecorations(elem);
 	if(this.heatDiff > 0) {
 		elem.classList.add('red');
 	} else if(this.heatDiff == 0) {
