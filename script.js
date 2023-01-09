@@ -434,7 +434,7 @@ window.onload = function() {
 }
 
 function addDropdownOptions(parentNode, cellId) {
-	var componentClasses = getComponentsCss();
+	var componentClasses = getAllComponentsCss();
 	for(var i = 0; i < componentClasses.length; i++){
 		var componentBtn = document.createElement('button');
 		componentBtn.className = componentClasses[i];
@@ -449,33 +449,27 @@ function addDropdownOptions(parentNode, cellId) {
 
 //////////////////// Begin export/import/save functionality ////////////////////
 var delimiter = '|';
-var delimiterCells = ';';
 
 /**
 * Converts the current reactor layout to one string.
 * Leading with the given layout name, reactor level, currently empty column,
-* and at the end pairs of cell-id and component css class.
+* and at the end the serialized components, split in two parts.
 * Everything joined by delimiters.
 * 
-* Thoughts:
-* URLs in most cases are limited to 2000 characters. 
-* Could change the string, so that each component is represented by one character, instead of the css class.
-* And all 81 cells are always exported, to get rid of the position part and delimiter.
-* But even then the amount of layouts that can be transported at once in an url is limited to like 20.
-* 
-* Example: Reactor_1|1||3_3;c-fan;3_4;c-bs;3_5;c-fan;4_3;c-he;4_4;c-bs;4_5;c-cb1;5_3;c-fan;5_4;c-bs;5_5;c-fan;
+* Example: Reactor_1|1||aaaaaayaaaaxaveaaaafhnoaratazapdbbaaajaaa|aasaaaaeaqkAaauaamaaaaaaaaCacaqaaaaaaaeb
 */
 function convertLayoutToString() {
 	// Last field reserved for something like initial battery.
 	var result = document.getElementById('layout-name').value + delimiter + document.getElementById('level').value + delimiter + delimiter;
 	var cells = document.getElementsByClassName('cell');
 	for(var i = 0; i < cells.length; i++) {
-		var htmlCell = cells[i];
-		if(htmlCell.classList.contains('c-empty')){
-			// Skip empty cells to save data.
-			continue;
+		var cellCompClass = getComponentClassOnly(cells[i]);
+
+		result += getAllSerializationStrings()[getAllComponentsCss().indexOf(cellCompClass)];
+		// Somehow can't mark and copy the alert message, if the word is over 80 characters long?
+		if(i == 40) {
+			result += delimiter;
 		}
-		result = result + htmlCell.id + delimiterCells + getComponentClassOnly(htmlCell) + delimiterCells;
 	}
 	return result;
 	// Thought about encoding the enitre string as base64.
@@ -504,11 +498,11 @@ function loadLayoutFromString(layout) {
 	setReactorLevel(level, true);
 	// Does not trigger the html onchange event.
 	document.getElementById('level').value = level;
-	var cells = splitted[3].split(delimiterCells);
-	for(var i = 0; i < cells.length-1; i += 2) {
-		var cellId = cells[i];
-		var cssClass = cells[i+1];
-		document.getElementById(cellId).className = 'cell ' + cssClass;
+	// Serialized reactor string is split into two parts.
+	var serializedString = splitted[3] + splitted[4];
+	for(var i = 0; i < serializedString.length; i++) {
+		var cssClass = getAllComponentsCss()[getAllSerializationStrings().indexOf(serializedString.charAt(i))];
+		document.getElementsByClassName('cell')[i].className = 'cell ' + cssClass;
 	}
 	updateReactorStats();
 }
@@ -561,7 +555,7 @@ function queryImportString() {
 */
 function normalizeInputName() {
 	document.getElementById('layout-name').value = document.getElementById('layout-name').value
-			.replace(delimiter,'').replace(delimiterCells,'');
+			.replace(delimiter,'');
 }
 
 /**
@@ -609,7 +603,7 @@ function removeSelectedSave() {
 function getComponentClassOnly(htmlElement) {
 	var classes = htmlElement.classList;
 	for(var i = 0; i < classes.length; i++) {
-		if(getComponentsCss().includes(classes[i])) {
+		if(getAllComponentsCss().includes(classes[i])) {
 			return classes[i];
 		}
 	}
@@ -619,7 +613,7 @@ function getComponentClassOnly(htmlElement) {
 /**
 * Get all possible reactor component css classes.
 */
-function getComponentsCss() {
+function getAllComponentsCss() {
 	// TODO: Dynamically read all '.c-' classes from css file?
 	// var sheets = document.styleSheets;
 	// TODO: Or at least use array of Component objects, so the classes are only defined once in javascript.
@@ -628,6 +622,19 @@ function getComponentsCss() {
 		'c-bs', 'c-bl', 'c-bxl', 'c-hd', 'c-cb', 'c-pb', 'c-sb', 'c-gb', 
 		'c-cb1', 'c-cb2', 'c-cb3', 'c-pp', 'c-dpp', 'c-qpp', 
 		'c-rtg', 'c-eb1', 'c-eb2', 'c-eb3'];
+}
+
+/**
+* Get all serialized strings for components.
+* Matches index with getAllComponentsCss().
+*/
+function getAllSerializationStrings() {
+	// TODO: Find a better way to bind components, serialization and css together. This feels really bad.
+	return ['a', 'b', 'c', 'd', 'e', 
+			'f', 'g', 'h', 'i', 'j', 'k', 
+			'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 
+			't', 'u', 'v', 'w', 'x', 'y', 
+			'z', 'A', 'B', 'C'];
 }
 
 /**
@@ -799,7 +806,6 @@ function createComponentFromHtml(htmlCell) {
 		logDebug("Found unknown type of cell!");
 	}
 }
-
 class Component {
 	name;
 	minLevel;
@@ -820,7 +826,8 @@ class Component {
 	buff = 0.0;
 	isProcessed = false;
 	
-	constructor(name, minLevel, energyPerSec, heat, totalEnergy, doesTransferHeat, energyStorage, providedBuff, buffDirections, position, htmlElement) {
+	constructor(name, minLevel, energyPerSec, heat, totalEnergy, doesTransferHeat,
+			energyStorage, providedBuff, buffDirections, position, htmlElement) {
 		this.name = name;
 		this.minLevel = minLevel;
 		this.energyPerSec = energyPerSec;
