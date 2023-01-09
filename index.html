@@ -7,17 +7,19 @@
 	<body>
 		<script src="script.js"></script>
 		<h1 class="title">Mr.Mine Reactor Planner</h1>
+		<noscript>This website only works with JavaScript enabled!</noscript>
 		<!--div>
 			Ideas:
 			display heat value and member of each heat system
 			allow drag and drop to build? or shift click?
 			do not delete components when changing reactor size, until confirmation?
 			set initial battery charge
-			good setup presets to pick from
+			good setup presets to pick from. Maybe separate page with table and filter functions?
 			move and rotate current setup
 			Display overall component counts.
 			link to github issues.
 			Mark too high level components already in dropdown while building?
+			advanced: programmatically improve given layouts?
 			
 			Design:
 			images?
@@ -25,14 +27,16 @@
 			distinguish more between class and id in css?
 			Use more html labels?
 			Stats tooltip trigger currently expands over the whole grid cell, and not just the visible text.
+			"modern" or game fitting button designs
+			reorder dropdown comps to match crafting menu instead of inventory?
 			
 			Bugs:
 			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
 			Somehow the size of the saves selection changes when inserting the first entry.
 		</div-->
 		<div class="feedback-container">
-			<div title="Energy per second, like shown ingame.">Energy/Sec: <span id="feedback_eps"></span></div>
-			<div title="Red text means the battery capacity isn't sufficient.">Battery capacity: <span id="feedback_bcap"></span></div>
+			<div title="Energy per second, like shown ingame. If it is negative, make sure to have enough stored energy!">Energy/Sec: <span id="feedback_eps"></span></div>
+			<div title="Red text means the battery capacity isn't sufficient. Either for storing produced energy, or for supplying bombardements.">Battery capacity: <span id="feedback_bcap"></span></div>
 			<div title="After what time the batteries would be full, if empty rods get replaced.">Battery full in: <span id="feedback_bfull"></span></div>
 			<div title="The energy you end up with after all rods are finished. Without replacing any and assuming enough batteries.">Overall energy balance: <span id="feedback_ediff"></span></div>
 			<div title="Combines the heat of all components, even isolated fans. A negative number is good, but doesn't necessarily mean everything is properly cooled.">Overall heat balance: <span id="feedback_hdiff"></span></div>
@@ -53,9 +57,9 @@
 		</div>
 		<div id="feedback-warning"> </div>
 		<div id="feedback-hint"></div>
-		
 		<div class="reactor-container" id="reactor-container">
 			<!-- Filled via javascript. -->
+			This website only works with JavaScript enabled!
 		</div>
 		<div class="side-options">Select reactor level:
 			<select id="level" name="level" onchange="setReactorLevel(this.value)">

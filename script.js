@@ -386,7 +386,7 @@ function addToRectorStats(components) {
 */
 window.onload = function() {
 	var reactorContainerNode = document.getElementById('reactor-container');
-	
+	reactorContainerNode.innerHTML = '';
 	for(var i = 0; i < 9; i++) {
 		for(var j = 0; j < 9; j++) {
 			// Div containing the button.
