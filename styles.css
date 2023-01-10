@@ -221,32 +221,31 @@ body{
 	background-color: #d17534;
 }
 .c-cb:before {
-	content: "\002B06\002B07";
-	font-size: 200%;
+	content: "\0025B2\a\0025BC";
+	font-size: 150%;
+	white-space: pre; /* Make new line with \a */
 }
 .c-pb {
 	background-color: #8ca0cb;
 }
 .c-pb:before {
-	content: "\002B05\002B07";
-	font-size: 200%;
+	content: "\0025C0\0025BC";
+	font-size: 150%;
 }
 .c-sb {
 	background-color: #b1b6b6;
 }
 .c-sb:before {
-	content: "\002B06\0027A1";
-	font-size: 200%;
+	content: "\0025B2\0025B6";
+	font-size: 150%;
 }
 .c-gb {
 	background-color: #dab249;
 }
 .c-gb:before {
-	content: "\002196\002197\a\002199\002198";
+	content: "\0025E4\000020\0025E5\a\0025E3\000020\0025E2";
 	white-space: pre; /* Make new line with \a */
 	font-size: 150%;
-	font-weight: bold;
-	line-height: 80%; /* Put the two rows of arrows closer together */
 }
 .c-cb1 {
 	background-color: #d5e263;
