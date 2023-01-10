@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<title>Mr.Mine Reactor Planner</title>
-		<link rel="stylesheet" href="styles.css" />
+		<link rel="stylesheet" href="styles.css">
 	</head>
 	<body>
 		<script src="script.js"></script>
@@ -25,7 +25,6 @@
 			images?
 			display values in one column? or directly behind the label?
 			distinguish more between class and id in css?
-			Use more html labels?
 			Stats tooltip trigger currently expands over the whole grid cell, and not just the visible text.
 			"modern" or game fitting button designs
 			reorder dropdown comps to match crafting menu instead of inventory?
@@ -62,23 +61,24 @@
 			<!-- Filled via javascript. -->
 			This website only works with JavaScript enabled!
 		</div>
-		<div class="side-options">Select reactor level:
+		<div class="side-options">
+			<label for="level">Select reactor level:</label>
 			<select id="level" name="level" onchange="setReactorLevel(this.value)">
-			  <option value="1">Level 1 (3x3)</option>
-			  <option value="2">Level 2 (3x5)</option>
-			  <option value="3">Level 3 (5x5)</option>
-			  <option value="4">Level 4 (7x7 minus 4)</option>
-			  <option value="5" selected="selected">Level 5 (9x9)</option>
+				<option value="1">Level 1 (3x3)</option>
+				<option value="2">Level 2 (3x5)</option>
+				<option value="3">Level 3 (5x5)</option>
+				<option value="4">Level 4 (7x7 minus 4)</option>
+				<option value="5" selected="selected">Level 5 (9x9)</option>
 			</select>
 		</div>
-		<br/>
+		<br>
 		<div class="side-options">
 			<button onclick="setReactorLevel(level.value, true)">Clear reactor</button>
 		</div>
-		<br/>
+		<br>
 		<div id="exportimportsave" class="side-options">
 			<label for="layout-name">Layout name: </label>
-			<input type="text" id="layout-name" maxlength="40" value="Reactor 1" oninput="normalizeInputName()"/><br/>
+			<input type="text" id="layout-name" maxlength="40" value="My Reactor Layout" oninput="normalizeInputName()"><br>
 				
 			<button onclick="addLayoutToSaves()" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Save reactor</button>
 			<button onclick="displayExportString()">Export reactor</button>
@@ -91,15 +91,15 @@
 				<!--button>Export all?</button-->
 			</div>
 		</div>
-		<br/>
+		<br>
 		<div id="quick-build" class="side-options">
-			<input type="checkbox" id="use-quick-build" >Use quick-build</input>
+			<input type="checkbox" id="use-quick-build"><label for="use-quick-build">Use quick-build</label>
 			<button onclick="onCellClick('quick-build-dropdown', this)" id="quick-build-button" class="c-empty"></button>
 			<div id="quick-build-dropdown" class="dropdown-content">
 				<!-- Filled via javascript. -->
 			</div>
 		</div>
-		</br/>
+		<br>
 		<div id="comp-description" class="side-options">
 			<!-- Filled via javascript. -->
 		</div>

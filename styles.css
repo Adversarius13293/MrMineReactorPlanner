@@ -126,93 +126,93 @@ body{
 .c-empty {
 	background-color: #dddddd;
 }
-.c-empty:before {
+.c-empty::before {
 	content: "";
 }
 .c-fan {
 	background-color: #2d3f62;
 }
-.c-fan:before {
+.c-fan::before {
 	content: "\002622";
 	font-size: 240%;
 }
 .c-he {
 	background-color: #c04646;
 }
-.c-he:before {
+.c-he::before {
 	content: "HE";
 }
 .c-dhe {
 	background-color: #c04646;
 }
-.c-dhe:before {
+.c-dhe::before {
 	content: "DHE";
 }
 .c-qhe {
 	background-color: #c04646;
 }
-.c-qhe:before {
+.c-qhe::before {
 	content: "QHE";
 }
 .c-e {
 	background-color: #54be56;
 }
-.c-e:before {
+.c-e::before {
 	content: "E";
 }
 .c-de {
 	background-color: #54be56;
 }
-.c-de:before {
+.c-de::before {
 	content: "DE";
 }
 .c-qe {
 	background-color: #54be56;
 }
-.c-qe:before {
+.c-qe::before {
 	content: "QE";
 }
 .c-mo {
 	background-color: #4d53bf;
 }
-.c-mo:before {
+.c-mo::before {
 	content: "MO";
 }
 .c-dmo {
 	background-color: #4d53bf;
 }
-.c-dmo:before {
+.c-dmo::before {
 	content: "DMO";
 }
 .c-qmo {
 	background-color: #4d53bf;
 }
-.c-qmo:before {
+.c-qmo::before {
 	content: "QMO";
 }
 .c-bs {
 	background-color: #815a2b;
 }
-.c-bs:before {
+.c-bs::before {
 	content: "\01F50B";
 }
 .c-bl {
 	background-color: #815a2b;
 }
-.c-bl:before {
+.c-bl::before {
 	content: "\01F50B\01F50B";
 }
 .c-bxl {
 	background-color: #815a2b;
 }
-.c-bxl:before {
+.c-bxl::before {
 	content: "\01F50B\01F50B\a\01F50B\01F50B";
     white-space: pre; /* Make new line with \a */
 }
 .c-hd {
 	background-color: #a3b6c5;
 }
-.c-hd:before {
+.c-hd::before {
 	content: "\002551\a\002550\002550\00256C\002550\002550\a\002551";
 	white-space: pre; /* Make new line with \a */
 	font-size: 90%;
@@ -220,7 +220,7 @@ body{
 .c-cb {
 	background-color: #d17534;
 }
-.c-cb:before {
+.c-cb::before {
 	content: "\0025B2\a\0025BC";
 	font-size: 150%;
 	white-space: pre; /* Make new line with \a */
@@ -228,21 +228,21 @@ body{
 .c-pb {
 	background-color: #8ca0cb;
 }
-.c-pb:before {
+.c-pb::before {
 	content: "\0025C0\0025BC";
 	font-size: 150%;
 }
 .c-sb {
 	background-color: #b1b6b6;
 }
-.c-sb:before {
+.c-sb::before {
 	content: "\0025B2\0025B6";
 	font-size: 150%;
 }
 .c-gb {
 	background-color: #dab249;
 }
-.c-gb:before {
+.c-gb::before {
 	content: "\0025E4\000020\0025E5\a\0025E3\000020\0025E2";
 	white-space: pre; /* Make new line with \a */
 	font-size: 150%;
@@ -250,60 +250,60 @@ body{
 .c-cb1 {
 	background-color: #d5e263;
 }
-.c-cb1:before {
+.c-cb1::before {
 	content: "CB1";
 }
 .c-cb2 {
 	background-color: #d5e263;
 }
-.c-cb2:before {
+.c-cb2::before {
 	content: "CB2";
 }
 .c-cb3 {
 	background-color: #d5e263;
 }
-.c-cb3:before {
+.c-cb3::before {
 	content: "CB3";
 }
 .c-pp {
 	background-color: #9791a3;
 }
-.c-pp:before {
+.c-pp::before {
 	content: "PP";
 }
 .c-dpp {
 	background-color: #9791a3;
 }
-.c-dpp:before {
+.c-dpp::before {
 	content: "DPP";
 }
 .c-qpp {
 	background-color: #9791a3;
 }
-.c-qpp:before {
+.c-qpp::before {
 	content: "QPP";
 }
 .c-rtg {
 	background-color: #a14e70;
 }
-.c-rtg:before {
+.c-rtg::before {
 	content: "RTG";
 }
 .c-eb1 {
 	background-color: #57a1b3;
 }
-.c-eb1:before {
+.c-eb1::before {
 	content: "EB1";
 }
 .c-eb2 {
 	background-color: #57a1b3;
 }
-.c-eb2:before {
+.c-eb2::before {
 	content: "EB2";
 }
 .c-eb3 {
 	background-color: #57a1b3;
 }
-.c-eb3:before {
+.c-eb3::before {
 	content: "EB3";
 }
