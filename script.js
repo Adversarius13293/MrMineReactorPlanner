@@ -414,7 +414,8 @@ window.onload = function() {
 			cellContainer.appendChild(dropdown);
 			
 			// Dropown options, for each cell.
-			// TODO: Reusing just one dropdown div for all buttons would be nice, but I would need to find the current cell button. And have to align the dropdown dynamically.
+			// TODO: Reusing just one dropdown div for all buttons would be nice, but that requires 
+			// 		 to find the current cell button. And the dropdown has to be aligned dynamically.
 			addDropdownOptions(dropdown, i+'_'+j);
 		}
 		reactorContainerNode.appendChild(document.createElement('br'));
@@ -422,13 +423,9 @@ window.onload = function() {
 	
 	addDropdownOptions(document.getElementById('quick-build-dropdown'), 'quick-build-button')
 	
-	// TODO: Move logic into parseLayoutStringOrUrl?
-	var urlParams = new URLSearchParams(window.location.search);
-	var layout = urlParams.get('layout');
-	if(layout) {
-		loadLayoutFromString(layout);
-		addLayoutToSaves();
-	}
+	// Contains parameters like ?layout=abc&layout=xyz from url.
+	loadAndSaveLayouts(window.location.search);
+	
 	// Properly initialize all the numbers.
 	updateReactorStats();
 }
@@ -448,15 +445,31 @@ function addDropdownOptions(parentNode, cellId) {
 }
 
 //////////////////// Begin export/import/save functionality ////////////////////
-var delimiter = '|';
+const delimiter = '|';
+/** URL Parameter to store layout strings in. */
+const parameterNameLayout = 'layout';
+
+// TODO: Distinguish naming for import string, layout, url params.
+
+/**
+* Will load and save every layout, and end with the last one active.
+*/
+function loadAndSaveLayouts(importStringOrUrl) {
+	var layouts = getLayoutsFromUrlOrParams(importStringOrUrl);
+	for(var i = 0; i < layouts.length; i++) {
+		if(loadLayoutFromString(layouts[i])) {
+			addLayoutToSaves();
+		}
+	}
+}
 
 /**
 * Converts the current reactor layout to one string.
 * Leading with the given layout name, reactor level, currently empty column,
-* and at the end the serialized components, split in two parts.
+* and at the end the serialized components.
 * Everything joined by delimiters.
 * 
-* Example: Reactor_1|1||aaaaaayaaaaxaveaaaafhnoaratazapdbbaaajaaa|aasaaaaeaqkAaauaamaaaaaaaaCacaqaaaaaaaeb
+* Example: Reactor Test|1||aaaaaayaaaaxaveaaaafhnoaratazapdbbaaajaaaaasaaaaeaqkAaauaamaaaaaaaaCacaqaaaaaaaeb
 */
 function convertLayoutToString() {
 	// Last field reserved for something like initial battery.
@@ -466,75 +479,85 @@ function convertLayoutToString() {
 		var cellCompClass = getComponentClassOnly(cells[i]);
 
 		result += getAllSerializationStrings()[getAllComponentsCss().indexOf(cellCompClass)];
-		// Somehow can't mark and copy the alert message, if the word is over 80 characters long?
-		if(i == 40) {
-			result += delimiter;
-		}
 	}
 	return result;
-	// Thought about encoding the enitre string as base64.
-	// Mainly to avoid url conflicts with the user defined name.
-	// And to make it harder to manipulate the string.
-	// But being able to read the layouts name from the string is very useful.
-	// So first lets see if it really makes problems without encoding.
-	//return btoa(result);
 }
 
 /**
-* Assumes correctly formated input string.
+* Assumes correctly formated and already decoded input string.
+* Returns false if nothing got saved because of invalid layout string,
+* otherwise returns true.
 */
 function loadLayoutFromString(layout) {
-	// An imported layoutString could have been modified by the user, and mess up a lot on the page. 
-	// But its all local, and if a user want's to mess things up for tehm, let them do it?
 	if(!layout) {
 		// No string provided, just do nothing?
 		return false;
 	}
-	var splitted = parseLayoutStringOrUrl(layout).split(delimiter);
+	var splitted = layout.split(delimiter);
+	if(splitted.length !=4) {
+		// Invalid format.
+		return false;
+	}
 	var name = splitted[0];
 	document.getElementById('layout-name').value = splitted[0];
 	var level = splitted[1];
-	// TODO: Should I set the html level inside setReactorLevel()?
-	setReactorLevel(level, true);
+	// TODO: Should the html level be set inside setReactorLevel()?
 	// Does not trigger the html onchange event.
 	document.getElementById('level').value = level;
-	// Serialized reactor string is split into two parts.
-	var serializedString = splitted[3] + splitted[4];
+	// splitted[2] currently unused.
+	var serializedString = splitted[3];
 	for(var i = 0; i < serializedString.length; i++) {
 		var cssClass = getAllComponentsCss()[getAllSerializationStrings().indexOf(serializedString.charAt(i))];
 		document.getElementsByClassName('cell')[i].className = 'cell ' + cssClass;
 	}
+	// The layout string contains every cell, meaning it will make cells empty if needed.
+	// No need to create an empty reactor with setReactorLevel(), before setting all the components.
+	// By calling setReactorLevel() after setting the components, we make sure that there aren't any
+	// components outside the valid level-area, in case someone manipulated the layout string.
+	setReactorLevel(level, false);
 	updateReactorStats();
+	return true;
 }
 
 /**
-* Accepts pure layout strings, and urls with the layout parameter, 
-* and returns the pure layout string.
+* Accepts layout parameters with and without url prefix,
+* and returns the an array of the decoded layout strings.
 */
-function parseLayoutStringOrUrl(layoutUrl) {
-	// TODO: Might want to do some more checks?
-	// TODO: Support multiple layout parameter. Also not just as the first parameter.
-	if(layoutUrl.includes('?layout=')) {
-		return layoutUrl.split('?layout=')[1];
-	} else {
-		return layoutUrl;
+function getLayoutsFromUrlOrParams(layoutUrl) {
+	if(!layoutUrl) {
+		return [];
 	}
+	// TODO: Do some checks? It currently accepts any string.
+	var urlParams;
+	try {
+		var url = new URL(layoutUrl);
+		urlParams = url.searchParams;
+	} catch(_) {
+		// Wasn't a valid url, so hopefully direct params.
+		urlParams = new URLSearchParams(layoutUrl);
+		// Thoughts: Would like to make it work with convertLayoutToString() as input string.
+		// Because it would be nice if the user could inport clean looking layout strings.
+		// But that is not encoded, and can contain parameter-like strings.
+		// Can't make it work 100%, so just don't support it at all.
+	}
+	return urlParams.getAll(parameterNameLayout);
 }
 
 /**
 * Shows the current reactor layout string including the full url as an alert.
 */
 function displayExportString() {
-	// Linebreak somehow breaks selecting text with some browsers.
+	// Linebreak somehow breaks selecting text with some browsers?
+	// Somehow can't mark and copy the alert message, if the word is more than 80 characters long?
 	//alert('Export string of the current layout:\n' + 
-	alert(getUrlForLayout() + convertLayoutToString());
+	alert(getUrlForLayout() + encodeURIComponent(convertLayoutToString()));
 }
 
 /**
 * Get the url including the url parameter name for the reactor layout string.
 */
 function getUrlForLayout() {
-	return location.protocol + '//' + location.host + location.pathname + '?layout='
+	return location.protocol + '//' + location.host + location.pathname + '?'+parameterNameLayout+'='
 }
 
 /**
@@ -545,8 +568,7 @@ function queryImportString() {
 	var input = prompt('Please input an import string:');
 	// Pressing 'cancel' will return null. Empty string is handled with this, too.
 	if(input) {
-		loadLayoutFromString(input);
-		addLayoutToSaves();
+		loadAndSaveLayouts(input);
 	}
 }
 
@@ -555,24 +577,29 @@ function queryImportString() {
 */
 function normalizeInputName() {
 	document.getElementById('layout-name').value = document.getElementById('layout-name').value
-			.replace(delimiter,'');
+			.replace(delimiter, '');
+			// Should not need to care about parameter-like names. Since it will get encoded.
+			// Could only become a problem if convertLayoutToString() would get passed into getLayoutsFromUrlOrParams().
+			//.replace(parameterNameLayout + '=', parameterNameLayout); 
 }
 
 /**
-* Add the current reactor layout to the saves list.
+* Add the current reactor layout with its name to the saves list.
 * If you want to save a specific layout, it has to be loaded in first.
 * Will enable load and delete buttons.
 */
-function addLayoutToSaves(layoutString) {
+// TODO: Not very nice to only add entries to the list after havint to rendering it first?
+function addLayoutToSaves() {
 	var selectElement = document.getElementById('saves');
 	var opt = document.createElement('option');
-	opt.value = parseLayoutStringOrUrl(convertLayoutToString());
+	opt.value = convertLayoutToString();
 	opt.innerHTML = document.getElementById('layout-name').value;
 	opt.selected = true;
 	selectElement.appendChild(opt);
 	document.getElementById('load-layout').disabled = false;
 	document.getElementById('delete-layout').disabled = false;
 }
+
 /**
 * Removes the currently selected save entry.
 * Automatically selects the next entry.
@@ -744,7 +771,7 @@ function logDebug(message, append = false){
 function createComponentFromHtml(htmlCell) {
 	var position = parsePosition(htmlCell.id);
 	if(htmlCell.classList.contains('c-empty')){
-		// I do not need empty cells.
+		// Don't need empty cell objects.
 		// return new Component('Empty', 1, 0, 0, 0, false, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('c-fan')){
 		return new Component('Fan', 1, 0, -12, 0, false, false, 0, 0, position, htmlCell);

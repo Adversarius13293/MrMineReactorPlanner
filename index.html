@@ -77,8 +77,8 @@
 		</div>
 		<br>
 		<div id="exportimportsave" class="side-options">
-			<label for="layout-name">Layout name: </label>
-			<input type="text" id="layout-name" maxlength="40" value="My Reactor Layout" oninput="normalizeInputName()"><br>
+			<label for="layout-name" title="Display name for exporting and adding to the list. Some characters may be banned and will get removed.">Layout name: </label>
+			<input type="text" id="layout-name" maxlength="100" value="My Reactor Layout" oninput="normalizeInputName()"><br>
 				
 			<button onclick="addLayoutToSaves()" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Save reactor</button>
 			<button onclick="displayExportString()">Export reactor</button>
