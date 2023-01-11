@@ -222,22 +222,26 @@ body{
 }
 .c-cb::before {
 	content: "\0025B2\a\0025BC";
-	font-size: 130%;
 	white-space: pre; /* Make new line with \a */
+	font-size: 130%;
 }
 .c-pb {
 	background-color: #8ca0cb;
 }
 .c-pb::before {
-	content: "\0025C0\0025BC";
+	content: "\0025C0\000020\000020\000020\000020\000020\000020\a\0025BC";
+	white-space: pre; /* Make new line with \a */
 	font-size: 130%;
+	line-height: 100%; /* Overwrite change from font size. */
 }
 .c-sb {
 	background-color: #b1b6b6;
 }
 .c-sb::before {
-	content: "\0025B2\0025B6";
+	content: "\0025B2\a\000020\000020\000020\000020\000020\000020\0025B6";
+	white-space: pre; /* Make new line with \a */
 	font-size: 130%;
+	line-height: 90%;
 }
 .c-gb {
 	background-color: #dab249;

@@ -91,7 +91,7 @@ function updateCompDescription() {
 			description.innerHTML += 'Connects different heat components together<br/>';
 		}
 		if(comp.providedBuff != 0) {
-			description.innerHTML += 'Boosts components by '+formatNumber(comp.providedBuff*100)+'% in each direction<br/>';
+			description.innerHTML += 'Boosts components by '+formatNumber(comp.providedBuff*100)+'% in each given direction<br/>';
 		}
 	}
 }
@@ -657,6 +657,7 @@ function getAllComponentsCss() {
 */
 function getAllSerializationStrings() {
 	// TODO: Find a better way to bind components, serialization and css together. This feels really bad.
+	// TODO: Maybe compute letter from css index? But then changing something would brake all old strings.
 	return ['a', 'b', 'c', 'd', 'e', 
 			'f', 'g', 'h', 'i', 'j', 'k', 
 			'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 
