@@ -207,7 +207,7 @@ body{
 }
 .c-bxl::before {
 	content: "\01F50B\01F50B\a\01F50B\01F50B";
-    white-space: pre; /* Make new line with \a */
+	white-space: pre; /* Make new line with \a */
 }
 .c-hd {
 	background-color: #a3b6c5;
@@ -222,7 +222,7 @@ body{
 }
 .c-cb::before {
 	content: "\0025B2\a\0025BC";
-	font-size: 150%;
+	font-size: 130%;
 	white-space: pre; /* Make new line with \a */
 }
 .c-pb {
@@ -230,14 +230,14 @@ body{
 }
 .c-pb::before {
 	content: "\0025C0\0025BC";
-	font-size: 150%;
+	font-size: 130%;
 }
 .c-sb {
 	background-color: #b1b6b6;
 }
 .c-sb::before {
 	content: "\0025B2\0025B6";
-	font-size: 150%;
+	font-size: 130%;
 }
 .c-gb {
 	background-color: #dab249;
@@ -245,7 +245,7 @@ body{
 .c-gb::before {
 	content: "\0025E4\000020\0025E5\a\0025E3\000020\0025E2";
 	white-space: pre; /* Make new line with \a */
-	font-size: 150%;
+	font-size: 130%;
 }
 .c-cb1 {
 	background-color: #d5e263;
