@@ -601,6 +601,8 @@ function addLayoutToSaves() {
 	selectElement.appendChild(opt);
 	document.getElementById('load-layout').disabled = false;
 	document.getElementById('delete-layout').disabled = false;
+	document.getElementById('move-save-down').disabled = false;
+	document.getElementById('move-save-up').disabled = false;
 }
 
 /**
@@ -620,6 +622,33 @@ function removeSelectedSave() {
 		} else {
 			document.getElementById('load-layout').disabled = true;
 			document.getElementById('delete-layout').disabled = true;
+			document.getElementById('move-save-down').disabled = true;
+			document.getElementById('move-save-up').disabled = true;
+		}
+	}
+}
+
+/**
+* Tries to move the selected save in the given direction.
+* Direction is a number. Positive numbers will move it by that amount downwards,
+* and negative numbers upwards in the list.
+* Will stop when reaching the lower or upper limit.
+*/
+function moveSave(direction) {
+	var selectElement = document.getElementById('saves');
+	var currentIndex = selectElement.selectedIndex;
+	if(currentIndex >= 0) {
+		if(direction > 0) {
+			var targetIndex = Math.min(currentIndex + direction, selectElement.length-1);
+			// Adding an existing option seems to remove it from the old index, not insert it a second time.
+			// Since the old option with lower index will get removed afterwards, and all following options,
+			// including the newly inserted, will move one down by this, the index has to be one higher.
+			selectElement.add(selectElement[currentIndex], targetIndex + 1);
+			selectElement.selectedIndex = targetIndex;
+		} else if(direction < 0) {
+			var targetIndex = Math.max(currentIndex + direction, 0);
+			selectElement.add(selectElement[currentIndex], targetIndex);
+			selectElement.selectedIndex = targetIndex;
 		}
 	}
 }

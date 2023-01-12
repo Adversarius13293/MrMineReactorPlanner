@@ -85,11 +85,15 @@
 			<button onclick="displayExportString()">Export reactor</button>
 			<button onclick="queryImportString()">Import from string</button>
 			<div id="saves-container">
-				<select id="saves" name="saves" size="5">
+				<select id="saves" name="saves" size="6">
 				</select>
 				<button onclick="loadLayoutFromString(saves.value)" id="load-layout" disabled="">Load selected</button>
 				<button onclick="removeSelectedSave()" id="delete-layout" disabled="">Delete selected</button>
-				<!--button>Export all?</button-->
+				<!--button onclick="TODO" id="export-all" disabled="">Export all</button-->
+				<div id="move-saves">
+					<button onclick="moveSave(1)" id="move-save-down" title="Move selected entry down." disabled="">˅</button>
+					<button onclick="moveSave(-1)" id="move-save-up" title="Move selected entry up." disabled="">˄</button>
+				</div>
 			</div>
 		</div>
 		<br>

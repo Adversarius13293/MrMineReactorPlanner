@@ -70,6 +70,10 @@ body{
 	min-width: 110px; /* Make Load and Delete button same width. */
 }
 
+#move-saves button  {
+	min-width: initial;
+}
+
 #saves {
 	width: 270px;
 	float: left;
