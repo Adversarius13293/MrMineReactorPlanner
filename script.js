@@ -295,6 +295,9 @@ function updateReactorStats() {
 	} else {
 		// Keep default? Or make it green, too?
 	}
+	// TODO: Read the heat value for fans from some variable. This issue is noted somewhere else already.
+	document.getElementById('feedback_hdiffpercent').textContent = formatNumber(this.heatDiff/0.12);
+	
 	// rod used up
 	// bomb used up
 	
