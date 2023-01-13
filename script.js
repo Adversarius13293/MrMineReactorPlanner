@@ -556,6 +556,18 @@ function displayExportString() {
 	alert(getUrlForLayout() + encodeURIComponent(convertLayoutToString()));
 }
 
+function displayExportSaves() {
+	var exportString = '';
+	var selectElement = document.getElementById('saves')
+	for(var i = 0; i < selectElement.length; i++) {
+		exportString += encodeURIComponent(selectElement[i].value);
+		if(i < selectElement.length-1) {
+			exportString += '&' + parameterNameLayout + '=';
+		}
+	}
+	return alert(getUrlForLayout() + exportString);
+}
+
 /**
 * Get the url including the url parameter name for the reactor layout string.
 */
@@ -603,6 +615,7 @@ function addLayoutToSaves() {
 	document.getElementById('delete-layout').disabled = false;
 	document.getElementById('move-save-down').disabled = false;
 	document.getElementById('move-save-up').disabled = false;
+	document.getElementById('export-all').disabled = false;
 }
 
 /**
@@ -624,6 +637,7 @@ function removeSelectedSave() {
 			document.getElementById('delete-layout').disabled = true;
 			document.getElementById('move-save-down').disabled = true;
 			document.getElementById('move-save-up').disabled = true;
+			document.getElementById('export-all').disabled = true;
 		}
 	}
 }

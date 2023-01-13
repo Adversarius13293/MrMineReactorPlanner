@@ -32,7 +32,6 @@
 			
 			Bugs:
 			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
-			Somehow the size of the saves selection changes when inserting the first entry.
 		</div-->
 		<div class="feedback-container">
 			<div title="Energy per second, like shown ingame. If it is negative, make sure to have enough stored energy!">Energy/Sec: <span id="feedback_eps"></span></div>
@@ -85,11 +84,11 @@
 			<button onclick="displayExportString()">Export reactor</button>
 			<button onclick="queryImportString()">Import from string</button>
 			<div id="saves-container">
-				<select id="saves" name="saves" size="6">
+				<select id="saves" name="saves" size="2">
 				</select>
 				<button onclick="loadLayoutFromString(saves.value)" id="load-layout" disabled="">Load selected</button>
 				<button onclick="removeSelectedSave()" id="delete-layout" disabled="">Delete selected</button>
-				<!--button onclick="TODO" id="export-all" disabled="">Export all</button-->
+				<button onclick="displayExportSaves()" id="export-all" disabled="">Export all</button>
 				<div id="move-saves">
 					<button onclick="moveSave(1)" id="move-save-down" title="Move selected entry down." disabled="">˅</button>
 					<button onclick="moveSave(-1)" id="move-save-up" title="Move selected entry up." disabled="">˄</button>
@@ -98,8 +97,8 @@
 		</div>
 		<br>
 		<div id="quick-build" class="side-options">
-			<input type="checkbox" id="use-quick-build"><label for="use-quick-build">Use quick-build</label>
 			<button onclick="onCellClick('quick-build-dropdown', this)" id="quick-build-button" class="c-empty"></button>
+			<input type="checkbox" id="use-quick-build"><label for="use-quick-build">Use quick-build</label>
 			<div id="quick-build-dropdown" class="dropdown-content">
 				<!-- Filled via javascript. -->
 			</div>

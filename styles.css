@@ -76,6 +76,7 @@ body{
 
 #saves {
 	width: 270px;
+	height: 100px;
 	float: left;
 	overflow: auto; /* Scrollbar on both sides, only if needed. */
 }
@@ -107,6 +108,7 @@ body{
 	padding: 0px; /* Heat Duct chars had some problems. */
 	border: 2px solid black;
 	margin: 0px !important; /* To override the side options style, for quick-build dropdown. */
+	position: relative; /* To be able to align the button content absolute. */
 }
 
 .side-options {
@@ -254,6 +256,7 @@ body{
 	content: "\0025E4\000020\0025E5\a\0025E3\000020\0025E2";
 	white-space: pre; /* Make new line with \a */
 	font-size: 130%;
+	line-height: 110%; /* Overwrite change from font size. */
 }
 .c-cb1 {
 	background-color: #d5e263;
