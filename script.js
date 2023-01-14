@@ -20,20 +20,20 @@ function onCellClick(dropdownId, caller) {
 * Close the dropdown if clicked outside of any cell button.
 */
 window.onclick = function(event) {
-	if (!event.target.matches('.cell') && !event.target.matches('#quick-build-button')) {
+	if (!event.target.matches('.cell')
+				&& !event.target.matches('#quick-build-button')
+				&& !event.target.matches('.no-hide-on-click')) {
 		hideDropdowns();
 	}
 }
+
 /**
 * Hide every dropdown menu.
 */
 function hideDropdowns() {
-	var dropdowns = document.getElementsByClassName('dropdown-content');
+	var dropdowns = document.getElementsByClassName('show');
 	for (var i = 0; i < dropdowns.length; i++) {
-		var openDropdown = dropdowns[i];
-		if (openDropdown.classList.contains('show')) {
-			openDropdown.classList.remove('show');
-		}
+		dropdowns[i].classList.remove('show');
 	}
 }
 
@@ -545,18 +545,27 @@ function getLayoutsFromUrlOrParams(layoutUrl) {
 	}
 	return urlParams.getAll(parameterNameLayout);
 }
+// TODO: Properly name popup and dropdown everywhere.
 
-/**
-* Shows the current reactor layout string including the full url as an alert.
-*/
-function displayExportString() {
-	// Linebreak somehow breaks selecting text with some browsers?
-	// Somehow can't mark and copy the alert message, if the word is more than 80 characters long?
-	//alert('Export string of the current layout:\n' + 
-	alert(getUrlForLayout() + encodeURIComponent(convertLayoutToString()));
+function showExportPopup(textFieldContent){
+	hideDropdowns();
+	document.getElementById('popup-window').classList.add('show');
+	document.getElementById('export-field').value = textFieldContent;
+	document.getElementById('warn-length').style.display = 'none';
+	if(textFieldContent.length >= 2000) {
+		document.getElementById('warn-length').style.display = 'block';
+	}
 }
 
-function displayExportSaves() {
+/**
+* Shows the current reactor layout string including the full url.
+*/
+function exportCurrentLayout() {
+	// Somehow can't mark and copy messages of alert(), if the word is more than 80 characters long?
+	showExportPopup(getUrlForLayout() + encodeURIComponent(convertLayoutToString()));
+}
+
+function exportSavedLayouts() {
 	var exportString = '';
 	var selectElement = document.getElementById('saves')
 	for(var i = 0; i < selectElement.length; i++) {
@@ -565,7 +574,7 @@ function displayExportSaves() {
 			exportString += '&' + parameterNameLayout + '=';
 		}
 	}
-	return alert(getUrlForLayout() + exportString);
+	showExportPopup(getUrlForLayout() + exportString);
 }
 
 /**

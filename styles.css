@@ -121,6 +121,29 @@ body{
 	margin-right: 5px;
 }
 
+.popup-window {
+	display: none;
+	position: absolute;
+	top: 40%;
+	left: 25%;
+	width: 400px;
+	border: 2px solid red;
+	box-shadow: 0px 8px 16px 8px rgba(0,0,0,0.2);
+	background-color: blue;
+	padding: 20px;
+	z-index: 2; /* Higher overlay priority. */
+}
+
+.top-right {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+
+#export-field {
+	width: 100%;
+}
+
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {
 	display: block;
