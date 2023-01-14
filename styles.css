@@ -165,7 +165,11 @@ body{
 }
 .c-fan::before {
 	content: "\002622";
-	font-size: 240%;
+	font-size: 400%;
+	line-height: 100%; /* Overwrite change from font size. */
+	/* Keeps the content centered, regardless of font size or container size. */
+	position: absolute; 
+	transform: translate(-50%, -51%);
 }
 .c-he {
 	background-color: #c04646;
