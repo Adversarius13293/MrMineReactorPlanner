@@ -100,8 +100,12 @@ function updateCompDescription() {
 * Set the reactor level, which changes the available fields.
 * Starts at level 1 with 3x3, and ends at level 5 with 9x9.
 * Unknown values for level will have all cells enabled.
+* Will call updateReactorStats() in the end.
 */
-function setReactorLevel(level, clearEverything = false) {
+function setReactorLevel(level = null, clearEverything = false) {
+	if(level == null) {
+		level = document.getElementById('level').value;
+	}
 	var cells = document.getElementsByClassName('cell');
 	for(var i = 0; i < cells.length; i++) {
 		var cell = cells[i];
@@ -518,7 +522,6 @@ function loadLayoutFromString(layout) {
 	// By calling setReactorLevel() after setting the components, we make sure that there aren't any
 	// components outside the valid level-area, in case someone manipulated the layout string.
 	setReactorLevel(level, false);
-	updateReactorStats();
 	return true;
 }
 
@@ -677,6 +680,77 @@ function moveSave(direction) {
 }
 
 ////////////////////  ////////////////////
+
+/**
+* Move layout one tile in the given direction.
+* Does remove components that fall outside the current reactors level area.
+* Updates reactor stats afterwards.
+* Directions: 1=N 4=E 16=S 64=W
+*/
+function moveLayout(direction){
+	// TODO: Find a more elegant solution without code duplication?
+	if(1 & direction) { // North
+		for(var i = 0; i < 8; i++) {
+			for(var j = 0; j < 9; j++) {
+				document.getElementById(i+'_'+j).className = document.getElementById((i+1)+'_'+j).className;
+			}
+		}
+		for(var j = 0; j < 9; j++) {
+			document.getElementById('8_'+j).className = "cell c-empty";
+		}
+	}
+	if(4 & direction) { // East
+		for(var i = 0; i < 9; i++) {
+			for(var j = 8; j > 0; j--) {
+				document.getElementById(i+'_'+j).className = document.getElementById(i+'_'+(j-1)).className;
+			}
+		}
+		for(var i = 0; i < 9; i++) {
+			document.getElementById(i+'_0').className = "cell c-empty";
+		}
+	}
+	if(16 & direction) { // South
+		for(var i = 8; i > 0; i--) {
+			for(var j = 0; j < 9; j++) {
+				document.getElementById(i+'_'+j).className = document.getElementById((i-1)+'_'+j).className;
+			}
+		}
+		for(var j = 0; j < 9; j++) {
+			document.getElementById('0_'+j).className = "cell c-empty";
+		}
+	}
+	if(64 & direction) { // West
+		for(var i = 0; i < 9; i++) {
+			for(var j = 0; j < 8; j++) {
+				document.getElementById(i+'_'+j).className = document.getElementById(i+'_'+(j+1)).className;
+			}
+		}
+		for(var i = 0; i < 9; i++) {
+			document.getElementById(i+'_8').className = "cell c-empty";
+		}
+	}
+	// Currently used to remove components out of the valid area.
+	setReactorLevel();
+}
+
+/**
+* Rotate the reactor layout clockwise.
+* Does remove components that fall outside the current reactors level area.
+* Does not replace buff components, since they don't exists for each direction.
+* Updates reactor stats afterwards.
+*/
+function rotateLayout() {
+	for(var i = 0; i < 4; i++) {
+		for(var j = 0; j < 5; j++) {
+			var oldClass = document.getElementById(i+'_'+j).className;
+			document.getElementById(i+'_'+j).className = document.getElementById((8-j)+'_'+i).className;
+			document.getElementById((8-j)+'_'+i).className = document.getElementById((8-i)+'_'+(8-j)).className;
+			document.getElementById((8-i)+'_'+(8-j)).className = document.getElementById(j+'_'+(8-i)).className;
+			document.getElementById(j+'_'+(8-i)).className = oldClass;
+		}
+	}
+	setReactorLevel();
+}
 
 /**
 * Get only the css component part of the object.

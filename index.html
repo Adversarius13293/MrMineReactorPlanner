@@ -9,8 +9,6 @@
 		<h1 class="title">Mr.Mine Reactor Planner</h1>
 		<noscript>This website only works with JavaScript enabled!</noscript>
 		<!--div>
-			move and rotate current setup
-			
 			Ideas:
 			display heat value and member of each heat system
 			allow drag and drop to build? or shift click?
@@ -33,6 +31,7 @@
 			
 			Bugs:
 			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
+			firefox shows no horizontal scrollbar in select element??
 		</div-->
 		<div class="feedback-container">
 			<div title="Energy per second, like shown ingame. If it is negative, make sure to have enough stored energy!">Energy/Sec: <span id="feedback_eps"></span></div>
@@ -97,7 +96,17 @@
 			</div>
 		</div>
 		<br>
-		<div id="quick-build" class="side-options">
+		<div id="move-components" class="side-options side-flex-center">
+			<span id="move-warn">Move components. Deletes components that are out of bound!</span>
+			<div class="table-3">
+				<span></span><button onclick="moveLayout(1)" title="Up">&#x2B61;</button><span></span>
+				<button onclick="moveLayout(64)" title="Left">&#x2B60;</button>
+				<button onclick="rotateLayout()" title="Rotate. Will not replace buffs.">&#x2B6E;</button>
+				<button onclick="moveLayout(4)" title="Right">&#x2B62;</button>
+				<span></span><button onclick="moveLayout(16)" title="Down">&#x2B63;</button><span></span>
+			</div>
+		</div>
+		<div id="quick-build" class="side-options side-flex-center">
 			<button onclick="onCellClick('quick-build-dropdown', this)" id="quick-build-button" class="c-empty"></button>
 			<input type="checkbox" id="use-quick-build"><label for="use-quick-build">Use quick-build</label>
 			<div id="quick-build-dropdown" class="dropdown-content">
@@ -108,6 +117,7 @@
 		<div id="comp-description" class="side-options">
 			<!-- Filled via javascript. -->
 		</div>
+		<br>
 		<div id="popup-window" class="popup-window no-hide-on-click">
 			<button class="top-right">&#10006;</button>
 			<label for="export-field" class="no-hide-on-click">Exported layout:</label>
@@ -116,6 +126,6 @@
 		</div>
 		<div id="debug"></div>
 		<br>
-		<div class="footer">Feel free to report any ideas or issues over at <a href="https://github.com/Adversarius13293/MrMineReactorPlanner/issues" target="blank">GitHub</a></div>
+		<div class="footer">Feel free to report any ideas or issues over at <a href="https://github.com/Adversarius13293/MrMineReactorPlanner/issues" target="blank">GitHub</a>.</div>
 	</body>
 </html>

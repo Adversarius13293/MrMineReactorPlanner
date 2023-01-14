@@ -146,6 +146,21 @@ body{
 	color: black;
 }
 
+.table-3 {
+	display: inline-grid;
+	grid-template-columns: auto auto auto;
+}
+
+#move-warn {
+	max-width: 150px;
+}
+
+.side-flex-center {
+	display: flex;
+	align-items: center;
+	padding-left: 10px; /* Flex somehow ignores the margin of side-options. */
+}
+
 .footer {
 	color: gray;
 }
