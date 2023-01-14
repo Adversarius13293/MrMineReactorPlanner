@@ -124,12 +124,13 @@ body{
 .popup-window {
 	display: none;
 	position: absolute;
+	color: black;
 	top: 40%;
 	left: 25%;
 	width: 400px;
-	border: 2px solid red;
+	border: 2px solid black;
 	box-shadow: 0px 8px 16px 8px rgba(0,0,0,0.2);
-	background-color: blue;
+	background-color: #6f6f6f;
 	padding: 20px;
 	z-index: 2; /* Higher overlay priority. */
 }
@@ -142,6 +143,7 @@ body{
 
 #export-field {
 	width: 100%;
+	color: black;
 }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
