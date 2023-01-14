@@ -9,17 +9,18 @@
 		<h1 class="title">Mr.Mine Reactor Planner</h1>
 		<noscript>This website only works with JavaScript enabled!</noscript>
 		<!--div>
+			move and rotate current setup
+			
 			Ideas:
 			display heat value and member of each heat system
 			allow drag and drop to build? or shift click?
 			do not delete components when changing reactor size, until confirmation?
 			set initial battery charge
 			good setup presets to pick from. Maybe separate page with table and filter functions?
-			move and rotate current setup
 			Display overall component counts.
-			link to github issues.
 			Mark too high level components already in dropdown while building?
 			advanced: programmatically improve given layouts?
+			control selected saves index via url params
 			
 			Design:
 			images?
@@ -80,9 +81,9 @@
 			<label for="layout-name" title="Display name for exporting and adding to the list. Some characters may be banned and will get removed.">Layout name: </label>
 			<input type="text" id="layout-name" maxlength="100" value="My Reactor Layout" oninput="normalizeInputName()"><br>
 				
-			<button onclick="addLayoutToSaves()" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Save reactor</button>
+			<button onclick="addLayoutToSaves()" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Add reactor to list</button>
 			<button onclick="exportCurrentLayout()" class="no-hide-on-click">Export reactor</button>
-			<button onclick="queryImportString()">Import from string</button>
+			<button onclick="queryImportString()" title="Will add the imported layouts to your saves list.">Import from string</button>
 			<div id="saves-container">
 				<select id="saves" name="saves" size="2">
 				</select>
@@ -111,8 +112,10 @@
 			<button class="top-right">&#10006;</button>
 			<label for="export-field" class="no-hide-on-click">Exported layout:</label>
 			<input type="text" id="export-field" disabled="" class="no-hide-on-click">
-			<div id="warn-length" class="no-hide-on-click ">If the string is getting too long (like 2000 characters), it might not work as a direct url anymore. But you can still manually use the import button.</div>
+			<div id="warn-length" class="no-hide-on-click ">If the string is getting too long (like 2000 characters for some browsers), it might not work as a direct url anymore. But you can still manually use the import button.</div>
 		</div>
 		<div id="debug"></div>
+		<br>
+		<div class="footer">Feel free to report any ideas or issues over at <a href="https://github.com/Adversarius13293/MrMineReactorPlanner/issues" target="blank">GitHub</a></div>
 	</body>
 </html>
