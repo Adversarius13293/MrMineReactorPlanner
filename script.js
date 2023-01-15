@@ -955,7 +955,7 @@ function createComponentFromHtml(htmlCell) {
 	} else if(htmlCell.classList.contains('c-hd')){
 		return new Component('Heat Duct', 1, 0, 0, 0, true, false, 0, 0, position, htmlCell);
 	} else if(htmlCell.classList.contains('c-cb')){
-		return new Component('Copper Buff', 2, 0, 0, 0, false, false, 0.55, 1+16, position, htmlCell);
+		return new Component('Copper Buff', 3, 0, 0, 0, false, false, 0.55, 1+16, position, htmlCell);
 	} else if(htmlCell.classList.contains('c-pb')){
 		return new Component('Platinum Buff', 4, 0, 0, 0, false, false, 0.55, 16+64, position, htmlCell);
 	} else if(htmlCell.classList.contains('c-sb')){
