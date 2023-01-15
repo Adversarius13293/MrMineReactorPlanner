@@ -107,8 +107,8 @@
 			</div>
 		</div>
 		<div id="quick-build" class="side-options side-flex-center">
-			<button onclick="onCellClick('quick-build-dropdown', this)" id="quick-build-button" class="c-empty"></button>
-			<input type="checkbox" id="use-quick-build"><label for="use-quick-build">Use quick-build</label>
+			<button onclick="onCellClick(event, this, 'quick-build-dropdown')" id="quick-build-button" class="c-empty"></button>
+			<input type="checkbox" id="use-quick-build"><label for="use-quick-build" title="You can also use shift-click on the quick build component and on the reactor!">Use quick-build</label>
 			<div id="quick-build-dropdown" class="dropdown-content">
 				<!-- Filled via javascript. -->
 			</div>

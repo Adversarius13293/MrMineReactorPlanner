@@ -1,17 +1,40 @@
 /**
 * Toggle between hiding and showing the dropdown on button click. Hides other cells dropdowns.
 * If quick build is active, immediately set the cells new component.
+* Also allows removal and placement of components with shift like ingame.
 */
-function onCellClick(dropdownId, caller) {
-	var wasShown = document.getElementById(dropdownId).classList.contains('show');
-	// Hide previous dropdowns, in case multiple cells are clicked without selecting a component.
-	hideDropdowns();
-	if(caller.id != 'quick-build-button' && document.getElementById('use-quick-build').checked) {
-		setComponent(caller.id, document.getElementById('quick-build-button'));
+function onCellClick(e, caller, dropdownId) {
+	// With shift, copy component from quickbuild to the first free reactor slot.
+	if(e.shiftKey) {
+		if(caller.id == 'quick-build-button') {
+			outer:for(var i = 0; i < 9; i++) {
+				for(var j = 0; j < 9; j++) {
+					var cell = document.getElementById(i+'_'+j);
+					if(cell.classList.contains('c-empty')) {
+						setComponent(cell.id, caller);
+						break outer;
+					}
+				}
+			}
+		// Or with shift remove the clicked reactor component.
+		} else {
+			// TODO: Use instead setComponent() here and at other lines more often?
+			caller.className = "cell c-empty";
+			updateReactorStats();
+		}
+	// No shift, so open component selection dropdown, or use quickbuild.
 	} else {
-		if(!wasShown){
-			// All dropdowns are allready hidden. Only change something if it's supposed to be shown.
-			document.getElementById(dropdownId).classList.toggle('show');
+		var wasShown = document.getElementById(dropdownId).classList.contains('show');
+		// Hide previous dropdowns, in case multiple cells are clicked without selecting a component.
+		hideDropdowns();
+		if(caller.id != 'quick-build-button' && document.getElementById('use-quick-build').checked) {
+			setComponent(caller.id, document.getElementById('quick-build-button'));
+		} else {
+			// Enables toggling between showing and hiding, when clicking the same button.
+			if(!wasShown){
+				// All dropdowns are already hidden. Only change something if it's supposed to be shown.
+				document.getElementById(dropdownId).classList.toggle('show');
+			}
 		}
 	}
 }
@@ -405,13 +428,9 @@ window.onload = function() {
 			var cellBtn = document.createElement('button');
 			cellBtn.className = 'cell c-empty'
 			cellBtn.id = i+'_'+j;
-			// All this function-ing feels weird, but seems the only way to make it work.
-			// https://stackoverflow.com/questions/6048561/setting-onclick-to-use-current-value-of-variable-in-loop
-			cellBtn.onclick = function(arg, arg2) {
-				return function() {
-					onCellClick(arg, arg2);					
-				}
-			}('dropdown_'+i+'_'+j, cellBtn);
+			// Did it with cellBtn.onclick before. But the way to pass parameters to the function 
+			// looked bad, and passing the event object did not work either.
+			cellBtn.setAttribute('onclick', 'onCellClick(event, this, \'dropdown_'+i+'_'+j+'\')');
 			cellContainer.appendChild(cellBtn);
 			
 			// Div for the selection dropdown of each cell, hidden by default.
@@ -895,7 +914,11 @@ function parsePosition(idString) {
 */
 function logDebug(message, append = false){
 	var currentDate = new Date();
-	document.getElementById('debug').textContent = '[' + currentDate.toLocaleTimeString() + '] ' + message;
+	if(append) {
+		document.getElementById('debug').textContent += '[' + currentDate.toLocaleTimeString() + '] ' + message;
+	} else {
+		document.getElementById('debug').textContent = '[' + currentDate.toLocaleTimeString() + '] ' + message;
+	}
 }
 
 function createComponentFromHtml(htmlCell) {
