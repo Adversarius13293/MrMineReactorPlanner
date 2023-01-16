@@ -788,16 +788,43 @@ function getComponentClassOnly(htmlElement) {
 
 /**
 * Get all possible reactor component css classes.
+* The boolean parameter decides if css for simple style, or for images,
+* should be returned. Defaults to the use-simple-style checkbox.
 */
-function getAllComponentsCss() {
+function getAllComponentsCss(simpleStyle = document.getElementById('use-simple-style').checked) {
 	// TODO: Dynamically read all '.c-' classes from css file?
 	// var sheets = document.styleSheets;
-	// TODO: Or at least use array of Component objects, so the classes are only defined once in javascript.
-	return ['c-empty','c-fan', 'c-he', 'c-dhe', 'c-qhe', 
-		'c-e', 'c-de', 'c-qe', 'c-mo', 'c-dmo', 'c-qmo', 
-		'c-bs', 'c-bl', 'c-bxl', 'c-hd', 'c-cb', 'c-pb', 'c-sb', 'c-gb', 
-		'c-cb1', 'c-cb2', 'c-cb3', 'c-pp', 'c-dpp', 'c-qpp', 
-		'c-rtg', 'c-eb1', 'c-eb2', 'c-eb3'];
+	
+	if(simpleStyle) {
+		return ['c-empty', 'c-fan', 'c-he', 'c-dhe', 'c-qhe', 
+			'c-e', 'c-de', 'c-qe', 'c-mo', 'c-dmo', 'c-qmo', 
+			'c-bs', 'c-bl', 'c-bxl', 'c-hd', 'c-cb', 'c-pb', 'c-sb', 'c-gb', 
+			'c-cb1', 'c-cb2', 'c-cb3', 'c-pp', 'c-dpp', 'c-qpp', 
+			'c-rtg', 'c-eb1', 'c-eb2', 'c-eb3'];
+	} else {
+		return ['c-i-empty', 'c-i-fan', 'c-i-he', 'c-i-dhe', 'c-i-qhe', 
+			'c-i-e', 'c-i-de', 'c-i-qe', 'c-i-mo', 'c-i-dmo', 'c-i-qmo', 
+			'c-i-bs', 'c-i-bl', 'c-i-bxl', 'c-i-hd', 'c-i-cb', 'c-i-pb', 'c-i-sb', 'c-i-gb', 
+			'c-i-cb1', 'c-i-cb2', 'c-i-cb3', 'c-i-pp', 'c-i-dpp', 'c-i-qpp', 
+			'c-i-rtg', 'c-i-eb1', 'c-i-eb2', 'c-i-eb3'];
+	}
+}
+
+/**
+* Replaces all css classes of component elements, so that it matches the use-simple-style choice.
+*/
+function updateAllCss() {
+	var oldComponentsCss = getAllComponentsCss(!document.getElementById('use-simple-style').checked);
+	var newComponentsCss = getAllComponentsCss(document.getElementById('use-simple-style').checked);
+	for(var i = 0; i < oldComponentsCss.length; i++) {
+		// Result of getElementsByClassName updates live, meaning removing the filter class
+		// from the element will mess up the iteration. So clone it in an array first.
+		var matches = Array.from(document.getElementsByClassName(oldComponentsCss[i]));
+		for(var j = 0; j < matches.length; j++) {
+			matches[j].classList.remove(oldComponentsCss[i]);
+			matches[j].classList.add(newComponentsCss[i]);
+		}
+	}
 }
 
 /**
@@ -818,7 +845,11 @@ function getAllSerializationStrings() {
 */
 function getEmptyComponentTemplate() {
 	var emptyButton = document.createElement('button');
-	emptyButton.className = 'c-empty';
+	if(document.getElementById('use-simple-style').checked) {
+		emptyButton.className = 'c-empty';
+	} else {
+		emptyButton.className = 'c-i-empty';
+	}
 	return emptyButton;
 }
 
@@ -1000,7 +1031,7 @@ function createComponentFromHtml(htmlCell) {
 		case 28:
 			return new Component('Einsteinium Bombardment 3', 5, -180, 180, -10368000, true, false, 0, 0, position, htmlCell);
 		default:
-			logDebug("Found unknown type of cell!");
+			logDebug('Found unknown type of cell: ' + getComponentClassOnly(htmlCell));
 	}
 }
 class Component {
