@@ -11,7 +11,7 @@
 		<!--div>
 			Ideas:
 			display heat value and member of each heat system
-			allow drag and drop to build? or shift click?
+			allow drag and drop to build?
 			do not delete components when changing reactor size, until confirmation?
 			set initial battery charge
 			good setup presets to pick from. Maybe separate page with table and filter functions?
@@ -19,6 +19,8 @@
 			Mark too high level components already in dropdown while building?
 			advanced: programmatically improve given layouts?
 			control selected saves index via url params
+			double click and/or enter to load a selected save
+			display unlock level for components
 			
 			Design:
 			images?
@@ -81,7 +83,7 @@
 			<input type="text" id="layout-name" maxlength="100" value="My Reactor Layout" oninput="normalizeInputName()"><br>
 				
 			<button onclick="addLayoutToSaves()" title="Saved layouts will still be lost when closing or reloading the window! Use export and store the url somewhere.">Add reactor to list</button>
-			<button onclick="exportCurrentLayout()" class="no-hide-on-click">Export reactor</button>
+			<button onclick="exportCurrentLayout()" title="Will export the currently visible reactor layout as an url you can save or share." class="no-hide-on-click">Export reactor</button>
 			<button onclick="queryImportString()" title="Will add the imported layouts to your saves list.">Import from string</button>
 			<div id="saves-container">
 				<select id="saves" name="saves" size="2">
@@ -107,7 +109,7 @@
 			</div>
 		</div>
 		<div id="quick-build" class="side-options side-flex-center">
-			<button onclick="onCellClick(event, this, 'quick-build-dropdown')" id="quick-build-button" class="c-empty"></button>
+			<button onclick="onCellClick(event, this, 'quick-build-dropdown')" id="quick-build-button"></button>
 			<input type="checkbox" id="use-quick-build"><label for="use-quick-build" title="You can also use shift-click on the quick build component and on the reactor!">Use quick-build</label>
 			<div id="quick-build-dropdown" class="dropdown-content">
 				<!-- Filled via javascript. -->

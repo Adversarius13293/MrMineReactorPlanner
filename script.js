@@ -10,7 +10,7 @@ function onCellClick(e, caller, dropdownId) {
 			outer:for(var i = 0; i < 9; i++) {
 				for(var j = 0; j < 9; j++) {
 					var cell = document.getElementById(i+'_'+j);
-					if(cell.classList.contains('c-empty')) {
+					if(cell.classList.contains(getEmptyComponentTemplate().className)) {
 						setComponent(cell.id, caller);
 						break outer;
 					}
@@ -18,9 +18,7 @@ function onCellClick(e, caller, dropdownId) {
 			}
 		// Or with shift remove the clicked reactor component.
 		} else {
-			// TODO: Use instead setComponent() here and at other lines more often?
-			caller.className = "cell c-empty";
-			updateReactorStats();
+			setComponent(caller.id, 'cell ' + getEmptyComponentTemplate());
 		}
 	// No shift, so open component selection dropdown, or use quickbuild.
 	} else {
@@ -60,6 +58,7 @@ function hideDropdowns() {
 	}
 }
 
+// TODO: Use setComponent() more often?
 /** 
 * Set a cells style to a specific elements style, in addition to the default cell style.
 */
@@ -139,7 +138,7 @@ function setReactorLevel(level = null, clearEverything = false) {
 		}
 		// TODO: Is it a good idea to use this whole function just to clear all cells?
 		if(clearEverything) {
-			cell.className = "cell c-empty";
+			cell.className = "cell " + getEmptyComponentTemplate().className;
 		}
 		// Now remove cells as needed.
 		// TODO: Could put everything in one if, but that sounds messy?
@@ -147,22 +146,22 @@ function setReactorLevel(level = null, clearEverything = false) {
 			if(position[0] == 0 || position[1] == 0 || position[0] == 8 || position[1] == 8
 					|| ((position[0] == 1 || position[0] == 7) && (position[1] == 1 || position[1] == 7))) {
 				// Remove all placed components.
-				cell.className = "cell c-empty";
+				cell.className = "cell " + getEmptyComponentTemplate().className;
 				cell.setAttribute('disabled', '');
 			}
 		} else if(level == 3) {
 			if(position[0] < 2 || position[1] < 2 || position[0] > 6 || position[1] > 6) {
-				cell.className = "cell c-empty";
+				cell.className = "cell " + getEmptyComponentTemplate().className;
 				cell.setAttribute('disabled', '');
 			}
 		} else if(level == 2) {
 			if(position[0] < 3 || position[1] < 2 || position[0] > 5 || position[1] > 6) {
-				cell.className = "cell c-empty";
+				cell.className = "cell " + getEmptyComponentTemplate().className;
 				cell.setAttribute('disabled', '');
 			}
 		} else if(level == 1) {
 			if(position[0] < 3 || position[1] < 3 || position[0] > 5 || position[1] > 5) {
-				cell.className = "cell c-empty";
+				cell.className = "cell " + getEmptyComponentTemplate().className;
 				cell.setAttribute('disabled', '');
 			}
 		}
@@ -426,7 +425,7 @@ window.onload = function() {
 			
 			// The button that displays each cell.
 			var cellBtn = document.createElement('button');
-			cellBtn.className = 'cell c-empty'
+			cellBtn.className = 'cell ' + getEmptyComponentTemplate().className;
 			cellBtn.id = i+'_'+j;
 			// Did it with cellBtn.onclick before. But the way to pass parameters to the function 
 			// looked bad, and passing the event object did not work either.
@@ -448,6 +447,8 @@ window.onload = function() {
 	}
 	
 	addDropdownOptions(document.getElementById('quick-build-dropdown'), 'quick-build-button')
+	// Set via javascript instead of html, to be able to pick different css based on configuration.
+	document.getElementById('quick-build-button').className = getEmptyComponentTemplate().className;
 	
 	// Contains parameters like ?layout=abc&layout=xyz from url.
 	loadAndSaveLayouts(window.location.search);
@@ -715,7 +716,7 @@ function moveLayout(direction){
 			}
 		}
 		for(var j = 0; j < 9; j++) {
-			document.getElementById('8_'+j).className = "cell c-empty";
+			document.getElementById('8_'+j).className = "cell " + getEmptyComponentTemplate().className;
 		}
 	}
 	if(4 & direction) { // East
@@ -725,7 +726,7 @@ function moveLayout(direction){
 			}
 		}
 		for(var i = 0; i < 9; i++) {
-			document.getElementById(i+'_0').className = "cell c-empty";
+			document.getElementById(i+'_0').className = "cell " + getEmptyComponentTemplate().className;
 		}
 	}
 	if(16 & direction) { // South
@@ -735,7 +736,7 @@ function moveLayout(direction){
 			}
 		}
 		for(var j = 0; j < 9; j++) {
-			document.getElementById('0_'+j).className = "cell c-empty";
+			document.getElementById('0_'+j).className = "cell " + getEmptyComponentTemplate().className;
 		}
 	}
 	if(64 & direction) { // West
@@ -745,7 +746,7 @@ function moveLayout(direction){
 			}
 		}
 		for(var i = 0; i < 9; i++) {
-			document.getElementById(i+'_8').className = "cell c-empty";
+			document.getElementById(i+'_8').className = "cell " + getEmptyComponentTemplate().className;
 		}
 	}
 	// Currently used to remove components out of the valid area.
@@ -811,6 +812,14 @@ function getAllSerializationStrings() {
 			'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 
 			't', 'u', 'v', 'w', 'x', 'y', 
 			'z', 'A', 'B', 'C'];
+}
+/**
+* Returns a html button element with the empty css class, to copy from.
+*/
+function getEmptyComponentTemplate() {
+	var emptyButton = document.createElement('button');
+	emptyButton.className = 'c-empty';
+	return emptyButton;
 }
 
 /**
@@ -921,69 +930,77 @@ function logDebug(message, append = false){
 	}
 }
 
+/**
+* Returns a Component object based on the given htmlCells class.
+* "Empty" cells won't return an object, same as not matched elements.
+* Based on the index of getAllComponentsCss().
+*/
 function createComponentFromHtml(htmlCell) {
 	var position = parsePosition(htmlCell.id);
-	if(htmlCell.classList.contains('c-empty')){
-		// Don't need empty cell objects.
-		// return new Component('Empty', 1, 0, 0, 0, false, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-fan')){
-		return new Component('Fan', 1, 0, -12, 0, false, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-he')){
-		return new Component('Highly Enriched Uranium Fuel Rod', 1, 10, 24, 36000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-dhe')){
-		return new Component('Dual Highly Enriched Uranium Fuel Rod', 2, 30, 66, 108000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-qhe')){
-		return new Component('Quad Highly Enriched Uranium Fuel Rod', 3, 90, 180, 324000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-e')){
-		return new Component('Enriched Uranium Fuel Rod', 1, 10, 18, 144000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-de')){
-		return new Component('Dual Enriched Uranium Fuel Rod', 2, 30, 48, 432000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-qe')){
-		return new Component('Quad Enriched Uranium Fuel Rod', 3, 90, 126, 1296000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-mo')){
-		return new Component('Mixed Oxide Fuel Rod', 1, 8, 21, 288000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-dmo')){
-		return new Component('Dual Mixed Oxide Fuel Rod', 2, 24, 54, 864000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-qmo')){
-		return new Component('Quad Mixed Oxide Fuel Rod', 3, 72, 144, 2592000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-bs')){
-		return new Component('Small Battery', 1, 0, 0, 0, false, 5000, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-bl')){
-		return new Component('Large Battery', 2, 0, 0, 0, false, 50000, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-bxl')){
-		return new Component('Extra Large Battery', 3, 0, 0, 0, false, 250000, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-hd')){
-		return new Component('Heat Duct', 1, 0, 0, 0, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-cb')){
-		return new Component('Copper Buff', 3, 0, 0, 0, false, false, 0.55, 1+16, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-pb')){
-		return new Component('Platinum Buff', 4, 0, 0, 0, false, false, 0.55, 16+64, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-sb')){
-		return new Component('Silver Buff', 4, 0, 0, 0, false, false, 0.55, 1+4, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-gb')){
-		return new Component('Gold Buff', 5, 0, 0, 0, false, false, 0.30, 2+8+32+128, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-cb1')){
-		return new Component('Californium Bombardment 1', 1, -10, 24, -288000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-cb2')){
-		return new Component('Californium Bombardment 2', 2, -30, 72, -864000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-cb3')){
-		return new Component('Californium Bombardment 3', 3, -90, 216, -2592000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-pp')){
-		return new Component('Pu/Po Fuel Rod', 1, 16, 36, 921600, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-dpp')){
-		return new Component('Dual Pu/Po Fuel Rod', 2, 48, 96, 2764800, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-qpp')){
-		return new Component('Quad Pu/Po Fuel Rod', 3, 144, 264, 8294400, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-rtg')){
-		return new Component('Polonium RTG Fuel Rod', 1, 6, 15, 1036800, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-eb1')){
-		return new Component('Einsteinium Bombardment 1', 5, -20, 30, -1152000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-eb2')){
-		return new Component('Einsteinium Bombardment 2', 5, -60, 90, -3456000, true, false, 0, 0, position, htmlCell);
-	} else if(htmlCell.classList.contains('c-eb3')){
-		return new Component('Einsteinium Bombardment 3', 5, -180, 180, -10368000, true, false, 0, 0, position, htmlCell);
-	} else {
-		logDebug("Found unknown type of cell!");
+	var compIndex = getAllComponentsCss().indexOf(getComponentClassOnly(htmlCell));
+	switch(compIndex) {
+		case 0:
+			// Don't need empty cell objects.
+			// return new Component('Empty', 1, 0, 0, 0, false, false, 0, 0, position, htmlCell);
+			break;
+		case 1:
+			return new Component('Fan', 1, 0, -12, 0, false, false, 0, 0, position, htmlCell);
+		case 2:
+			return new Component('Highly Enriched Uranium Fuel Rod', 1, 10, 24, 36000, true, false, 0, 0, position, htmlCell);
+		case 3:
+			return new Component('Dual Highly Enriched Uranium Fuel Rod', 2, 30, 66, 108000, true, false, 0, 0, position, htmlCell);
+		case 4:
+			return new Component('Quad Highly Enriched Uranium Fuel Rod', 3, 90, 180, 324000, true, false, 0, 0, position, htmlCell);
+		case 5:
+			return new Component('Enriched Uranium Fuel Rod', 1, 10, 18, 144000, true, false, 0, 0, position, htmlCell);
+		case 6:
+			return new Component('Dual Enriched Uranium Fuel Rod', 2, 30, 48, 432000, true, false, 0, 0, position, htmlCell);
+		case 7:
+			return new Component('Quad Enriched Uranium Fuel Rod', 3, 90, 126, 1296000, true, false, 0, 0, position, htmlCell);
+		case 8:
+			return new Component('Mixed Oxide Fuel Rod', 1, 8, 21, 288000, true, false, 0, 0, position, htmlCell);
+		case 9:
+			return new Component('Dual Mixed Oxide Fuel Rod', 2, 24, 54, 864000, true, false, 0, 0, position, htmlCell);
+		case 10:
+			return new Component('Quad Mixed Oxide Fuel Rod', 3, 72, 144, 2592000, true, false, 0, 0, position, htmlCell);
+		case 11:
+			return new Component('Small Battery', 1, 0, 0, 0, false, 5000, 0, 0, position, htmlCell);
+		case 12:
+			return new Component('Large Battery', 2, 0, 0, 0, false, 50000, 0, 0, position, htmlCell);
+		case 13:
+			return new Component('Extra Large Battery', 3, 0, 0, 0, false, 250000, 0, 0, position, htmlCell);
+		case 14:
+			return new Component('Heat Duct', 1, 0, 0, 0, true, false, 0, 0, position, htmlCell);
+		case 15:
+			return new Component('Copper Buff', 3, 0, 0, 0, false, false, 0.55, 1+16, position, htmlCell);
+		case 16:
+			return new Component('Platinum Buff', 4, 0, 0, 0, false, false, 0.55, 16+64, position, htmlCell);
+		case 17:
+			return new Component('Silver Buff', 4, 0, 0, 0, false, false, 0.55, 1+4, position, htmlCell);
+		case 18:
+			return new Component('Gold Buff', 5, 0, 0, 0, false, false, 0.30, 2+8+32+128, position, htmlCell);
+		case 19:
+			return new Component('Californium Bombardment 1', 1, -10, 24, -288000, true, false, 0, 0, position, htmlCell);
+		case 20:
+			return new Component('Californium Bombardment 2', 2, -30, 72, -864000, true, false, 0, 0, position, htmlCell);
+		case 21:
+			return new Component('Californium Bombardment 3', 3, -90, 216, -2592000, true, false, 0, 0, position, htmlCell);
+		case 22:
+			return new Component('Pu/Po Fuel Rod', 1, 16, 36, 921600, true, false, 0, 0, position, htmlCell);
+		case 23:
+			return new Component('Dual Pu/Po Fuel Rod', 2, 48, 96, 2764800, true, false, 0, 0, position, htmlCell);
+		case 24:
+			return new Component('Quad Pu/Po Fuel Rod', 3, 144, 264, 8294400, true, false, 0, 0, position, htmlCell);
+		case 25:
+			return new Component('Polonium RTG Fuel Rod', 1, 6, 15, 1036800, true, false, 0, 0, position, htmlCell);
+		case 26:
+			return new Component('Einsteinium Bombardment 1', 5, -20, 30, -1152000, true, false, 0, 0, position, htmlCell);
+		case 27:
+			return new Component('Einsteinium Bombardment 2', 5, -60, 90, -3456000, true, false, 0, 0, position, htmlCell);
+		case 28:
+			return new Component('Einsteinium Bombardment 3', 5, -180, 180, -10368000, true, false, 0, 0, position, htmlCell);
+		default:
+			logDebug("Found unknown type of cell!");
 	}
 }
 class Component {
