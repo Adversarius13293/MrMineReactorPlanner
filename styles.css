@@ -182,6 +182,10 @@ body{
 .c-empty::before {
 	content: "";
 }
+.c-i-empty {
+	background-image: url("images/empty.png");
+	background-size: cover; /* Auto resize */
+}
 .c-fan {
 	background-color: #2d3f62;
 }
@@ -193,11 +197,19 @@ body{
 	position: absolute; 
 	transform: translate(-50%, -51%);
 }
+.c-i-fan {
+	background-image: url("images/fan.png");
+	background-size: cover;
+}
 .c-he {
 	background-color: #c04646;
 }
 .c-he::before {
 	content: "HE";
+}
+.c-i-he {
+	background-image: url("images/he.png");
+	background-size: cover;
 }
 .c-dhe {
 	background-color: #c04646;
@@ -205,11 +217,19 @@ body{
 .c-dhe::before {
 	content: "DHE";
 }
+.c-i-dhe {
+	background-image: url("images/dhe.png");
+	background-size: cover;
+}
 .c-qhe {
 	background-color: #c04646;
 }
 .c-qhe::before {
 	content: "QHE";
+}
+.c-i-qhe {
+	background-image: url("images/qhe.png");
+	background-size: cover;
 }
 .c-e {
 	background-color: #54be56;
@@ -217,11 +237,19 @@ body{
 .c-e::before {
 	content: "E";
 }
+.c-i-e {
+	background-image: url("images/e.png");
+	background-size: cover;
+}
 .c-de {
 	background-color: #54be56;
 }
 .c-de::before {
 	content: "DE";
+}
+.c-i-de {
+	background-image: url("images/de.png");
+	background-size: cover;
 }
 .c-qe {
 	background-color: #54be56;
@@ -229,11 +257,19 @@ body{
 .c-qe::before {
 	content: "QE";
 }
+.c-i-qe {
+	background-image: url("images/qe.png");
+	background-size: cover;
+}
 .c-mo {
 	background-color: #4d53bf;
 }
 .c-mo::before {
 	content: "MO";
+}
+.c-i-mo {
+	background-image: url("images/mo.png");
+	background-size: cover;
 }
 .c-dmo {
 	background-color: #4d53bf;
@@ -241,11 +277,19 @@ body{
 .c-dmo::before {
 	content: "DMO";
 }
+.c-i-dmo {
+	background-image: url("images/dmo.png");
+	background-size: cover;
+}
 .c-qmo {
 	background-color: #4d53bf;
 }
 .c-qmo::before {
 	content: "QMO";
+}
+.c-i-qmo {
+	background-image: url("images/qmo.png");
+	background-size: cover;
 }
 .c-bs {
 	background-color: #815a2b;
@@ -253,11 +297,19 @@ body{
 .c-bs::before {
 	content: "\01F50B";
 }
+.c-i-bs {
+	background-image: url("images/bs.png");
+	background-size: cover;
+}
 .c-bl {
 	background-color: #815a2b;
 }
 .c-bl::before {
 	content: "\01F50B\01F50B";
+}
+.c-i-bl {
+	background-image: url("images/bl.png");
+	background-size: cover;
 }
 .c-bxl {
 	background-color: #815a2b;
@@ -265,6 +317,10 @@ body{
 .c-bxl::before {
 	content: "\01F50B\01F50B\a\01F50B\01F50B";
 	white-space: pre; /* Make new line with \a */
+}
+.c-i-bxl {
+	background-image: url("images/bxl.png");
+	background-size: cover;
 }
 .c-hd {
 	background-color: #a3b6c5;
@@ -274,6 +330,10 @@ body{
 	white-space: pre; /* Make new line with \a */
 	font-size: 90%;
 }
+.c-i-hd {
+	background-image: url("images/hd.png");
+	background-size: cover;
+}
 .c-cb {
 	background-color: #d17534;
 }
@@ -281,6 +341,10 @@ body{
 	content: "\0025B2\a\0025BC";
 	white-space: pre; /* Make new line with \a */
 	font-size: 130%;
+}
+.c-i-cb {
+	background-image: url("images/cb.png");
+	background-size: cover;
 }
 .c-pb {
 	background-color: #8ca0cb;
@@ -291,6 +355,10 @@ body{
 	font-size: 130%;
 	line-height: 100%; /* Overwrite change from font size. */
 }
+.c-i-pb {
+	background-image: url("images/pb.png");
+	background-size: cover;
+}
 .c-sb {
 	background-color: #b1b6b6;
 }
@@ -299,6 +367,10 @@ body{
 	white-space: pre; /* Make new line with \a */
 	font-size: 130%;
 	line-height: 90%;
+}
+.c-i-sb {
+	background-image: url("images/sb.png");
+	background-size: cover;
 }
 .c-gb {
 	background-color: #dab249;
@@ -309,11 +381,19 @@ body{
 	font-size: 130%;
 	line-height: 110%; /* Overwrite change from font size. */
 }
+.c-i-gb {
+	background-image: url("images/gb.png");
+	background-size: cover;
+}
 .c-cb1 {
 	background-color: #d5e263;
 }
 .c-cb1::before {
 	content: "CB1";
+}
+.c-i-cb1 {
+	background-image: url("images/cb1.png");
+	background-size: cover;
 }
 .c-cb2 {
 	background-color: #d5e263;
@@ -321,11 +401,19 @@ body{
 .c-cb2::before {
 	content: "CB2";
 }
+.c-i-cb2 {
+	background-image: url("images/cb2.png");
+	background-size: cover;
+}
 .c-cb3 {
 	background-color: #d5e263;
 }
 .c-cb3::before {
 	content: "CB3";
+}
+.c-i-cb3 {
+	background-image: url("images/cb3.png");
+	background-size: cover;
 }
 .c-pp {
 	background-color: #9791a3;
@@ -333,11 +421,19 @@ body{
 .c-pp::before {
 	content: "PP";
 }
+.c-i-pp {
+	background-image: url("images/pp.png");
+	background-size: cover;
+}
 .c-dpp {
 	background-color: #9791a3;
 }
 .c-dpp::before {
 	content: "DPP";
+}
+.c-i-dpp {
+	background-image: url("images/dpp.png");
+	background-size: cover;
 }
 .c-qpp {
 	background-color: #9791a3;
@@ -345,11 +441,19 @@ body{
 .c-qpp::before {
 	content: "QPP";
 }
+.c-i-qpp {
+	background-image: url("images/qpp.png");
+	background-size: cover;
+}
 .c-rtg {
 	background-color: #a14e70;
 }
 .c-rtg::before {
 	content: "RTG";
+}
+.c-i-rtg {
+	background-image: url("images/rtg.png");
+	background-size: cover;
 }
 .c-eb1 {
 	background-color: #57a1b3;
@@ -357,15 +461,27 @@ body{
 .c-eb1::before {
 	content: "EB1";
 }
+.c-i-eb1 {
+	background-image: url("images/eb1.png");
+	background-size: cover;
+}
 .c-eb2 {
 	background-color: #57a1b3;
 }
 .c-eb2::before {
 	content: "EB2";
 }
+.c-i-eb2 {
+	background-image: url("images/eb2.png");
+	background-size: cover;
+}
 .c-eb3 {
 	background-color: #57a1b3;
 }
 .c-eb3::before {
 	content: "EB3";
+}
+.c-i-eb3 {
+	background-image: url("images/eb3.png");
+	background-size: cover;
 }
