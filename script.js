@@ -1029,7 +1029,7 @@ function createComponentFromHtml(htmlCell) {
 		case 27:
 			return new Component('Einsteinium Bombardment 2', 5, -60, 90, -3456000, true, false, 0, 0, position, htmlCell);
 		case 28:
-			return new Component('Einsteinium Bombardment 3', 5, -180, 180, -10368000, true, false, 0, 0, position, htmlCell);
+			return new Component('Einsteinium Bombardment 3', 5, -180, 270, -10368000, true, false, 0, 0, position, htmlCell);
 		default:
 			logDebug('Found unknown type of cell: ' + getComponentClassOnly(htmlCell));
 	}
