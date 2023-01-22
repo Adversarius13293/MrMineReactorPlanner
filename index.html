@@ -8,33 +8,6 @@
 		<script src="script.js"></script>
 		<h1 class="title">Mr.Mine Reactor Planner</h1>
 		<noscript>This website only works with JavaScript enabled!</noscript>
-		<!--div>
-			Ideas:
-			display heat value and member of each heat system
-			allow drag and drop to build?
-			do not delete components when changing reactor size, until confirmation?
-			set initial battery charge
-			good setup presets to pick from. Maybe separate page with table and filter functions?
-			Display overall component counts.
-			Mark too high level components already in dropdown while building?
-			advanced: programmatically improve given layouts?
-			control selected saves index via url params
-			double click and/or enter to load a selected save
-			display unlock level for components
-			
-			Design:
-			images?
-			display values in one column? or directly behind the label?
-			distinguish more between class and id in css?
-			Stats tooltip trigger currently expands over the whole grid cell, and not just the visible text.
-			"modern" or game fitting button designs
-			reorder dropdown comps to match crafting menu instead of inventory?
-			Align buff arrows?
-			
-			Bugs:
-			especially when using buffs on bombardments, it can lead to them consuming more energy than needed in the last second.
-			firefox shows no horizontal scrollbar in select element??
-		</div-->
 		<div class="feedback-container">
 			<div title="Energy per second, like shown ingame. If it is negative, make sure to have enough stored energy!">Energy/Sec: <span id="feedback_eps"></span></div>
 			<div title="Red text means the battery capacity isn't sufficient. Either for storing produced energy, or for supplying bombardements.">Battery capacity: <span id="feedback_bcap"></span></div>
@@ -42,20 +15,6 @@
 			<div title="The energy you end up with after all rods are finished. Without replacing any and assuming enough batteries.">Overall energy balance: <span id="feedback_ediff"></span></div>
 			<div title="Combines the heat of all components, even isolated fans. A negative number is good, but doesn't necessarily mean everything is properly cooled.">Overall heat balance: <span id="feedback_hdiff"></span></div>
 			<div title="How much percent of one fan the overall heat difference equates to. E.g. 55% = 1 side of copper buff can be added. -120% = 4 sides of gold buff can be removed. 5% = one side of a silver buff can be replaced with a gold buff buffing two sides.">Heat difference: <span id="feedback_hdiffpercent"></span>% of a Fan</span></div>
-			<!--div>Fuel rod used up in: <span id="feedback_fup"></span></div>
-			<div>Fastest rod used up in: </div>
-			<div>Slowest rod used up in: </div>
-			<div>Bombardment used up in: <span id="feedback_bup"></span></div>
-			<div>Needed fuel replacements: <span id="feedback_frep"></span></div>
-			<div>Needed bombardment replacements: <span id="feedback_brep"></span></div-->
-			<!-- 
-				rod+bomb crafting costs? 			
-				battery full in X when not changing rods?
-				display rod and bomb stats for each rod and bomb type?
-				free battery at the end
-				wasted energy
-				complex energy usage: initial battery charge. negative eps, changing, not changing rods, only changing fuel rods.
-			-->
 		</div>
 		<div id="feedback-warning"> </div>
 		<div id="feedback-hint"></div>
@@ -110,7 +69,7 @@
 		</div>
 		<div id="quick-build" class="side-options side-flex-center">
 			<button onclick="onCellClick(event, this, 'quick-build-dropdown')" id="quick-build-button"></button>
-			<input type="checkbox" id="use-quick-build"><label for="use-quick-build" title="You can also use shift-click on the quick build component and on the reactor!">Use quick-build</label>
+			<input type="checkbox" id="use-quick-build"><label for="use-quick-build" title="You can also use shift-click on a quick build component or on components inside the reactor!">Use quick-build</label>
 			<div id="quick-build-dropdown" class="dropdown-content">
 				<!-- Filled via javascript. -->
 			</div>
@@ -130,7 +89,7 @@
 		<br>
 		<div>
 			<input type="checkbox" id="use-simple-style" onchange="updateAllCss()" checked>
-			<label for="use-simple-style">Use simplistic style.</label>
+			<label for="use-simple-style">Use simplistic style</label>
 		</div>
 		<br>
 		<div class="footer">Feel free to report any ideas or issues over at <a href="https://github.com/Adversarius13293/MrMineReactorPlanner/issues" target="blank">GitHub</a>.</div>
