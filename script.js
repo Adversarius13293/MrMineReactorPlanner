@@ -18,7 +18,7 @@ function onCellClick(e, caller, dropdownId) {
 			}
 		// Or with shift remove the clicked reactor component.
 		} else {
-			setComponent(caller.id, 'cell ' + getEmptyComponentTemplate());
+			setComponent(caller.id, getEmptyComponentTemplate());
 		}
 	// No shift, so open component selection dropdown, or use quickbuild.
 	} else {
